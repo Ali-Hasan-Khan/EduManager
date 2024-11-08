@@ -58,7 +58,7 @@ export const PATCH = async (
         role: validatedData.role as UserRole,
         status: validatedData.status as UserStatus,
         teacher: {
-          updateMany: {
+          update: {
             where: {
               userId: String(params.id), // Specify the teacher to update based on user ID
             },
@@ -68,7 +68,7 @@ export const PATCH = async (
           },
         },
         student: {
-          updateMany: {
+          update: {
             where: {
               userId: String(params.id), // Specify the teacher to update based on user ID
             },
