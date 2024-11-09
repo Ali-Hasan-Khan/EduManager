@@ -4,6 +4,7 @@ import { useState, SyntheticEvent } from "react";
 import { UserRole } from "@prisma/client";
 import { useRouter } from "next/navigation";
 import { UserStatus } from "@prisma/client";
+import { UserGender } from "@prisma/client";
 import { useToast } from "@/components/ui/use-toast";
 
 const Ad = () => {
@@ -13,6 +14,7 @@ const Ad = () => {
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
   const [email, setEmail] = useState("");
+  const [gender, setGender] = useState("");
   const [role, setRole] = useState("");
   const [status, setStatus] = useState("");
   const router = useRouter();
@@ -26,6 +28,8 @@ const Ad = () => {
         role: role,
         password: password,
         status: status,
+        emailVerified: new Date(),
+        gender: gender
       });
       toast({
         title: "User Add successfully",
@@ -48,6 +52,7 @@ const Ad = () => {
     setName("");
     setPassword("");
     setEmail("");
+    setGender("");
     setRole("");
     setStatus("");
     router.refresh();
@@ -118,6 +123,26 @@ const Ad = () => {
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
                     />
+                    <label
+                      htmlFor="gender"
+                      className="block font-medium text-gray-700 text-black dark:text-white"
+                    >
+                      Gender:
+                    </label>
+                    <select
+                      name="gender"
+                      id="gender"
+                      className="border border-gray-300 rounded-md p-2 w-full text-black"
+                      value={gender}
+                      onChange={(e) => setGender(e.target.value as UserGender)}
+                    >
+                      <option value="" hidden>
+                        Select Gender
+                      </option>
+                      <option value={UserGender.MALE}>Male</option>
+                      <option value={UserGender.FEMALE}>Female</option>
+                      <option value={UserGender.UNKNOW}>Unknown</option>
+                    </select>
                     <label
                       htmlFor="role"
                       className="block font-medium text-gray-700 text-black dark:text-white"
