@@ -1,0 +1,113 @@
+<svg viewBox="0 0 240 240" xmlns="http://www.w3.org/2000/svg">
+    <!-- Base Circle with subtle gradient -->
+    <defs>
+        <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:0.1"/>
+            <stop offset="100%" style="stop-color:#F3F4F6;stop-opacity:0.2"/>
+        </linearGradient>
+    </defs>
+    
+    <!-- Background Circle -->
+    <circle cx="120" cy="120" r="110" fill="url(#bgGradient)"/>
+    
+    <!-- Books Stack -->
+    <g transform="translate(0, 10)">
+        <!-- Bottom Book -->
+        <path 
+            d="M60 130 
+               Q90 125 120 130 
+               Q150 135 180 130 
+               L180 150 
+               Q150 155 120 150 
+               Q90 145 60 150 Z" 
+            fill="#FFFFFF"
+        />
+        
+        <!-- Middle Book -->
+        <path 
+            d="M70 110 
+               Q100 105 120 110 
+               Q140 115 170 110 
+               L170 130 
+               Q140 135 120 130 
+               Q100 125 70 130 Z" 
+            fill="#F9FAFB"
+        />
+        
+        <!-- Top Book -->
+        <path 
+            d="M80 90 
+               Q110 85 120 90 
+               Q130 95 160 90 
+               L160 110 
+               Q130 115 120 110 
+               Q110 105 80 110 Z" 
+            fill="#F3F4F6"
+        />
+    </g>
+    
+    <!-- Digital Screen Element -->
+    <rect 
+        x="85" 
+        y="70" 
+        width="70" 
+        height="45" 
+        rx="4" 
+        fill="#FFFFFF" 
+        stroke="#FFFFFF" 
+        stroke-width="2"
+    />
+    
+    <!-- Screen Content Lines -->
+    <g stroke="#FFFFFF" stroke-width="2">
+        <line x1="95" y1="85" x2="145" y2="85"/>
+        <line x1="95" y1="95" x2="135" y2="95"/>
+        <line x1="95" y1="105" x2="140" y2="105"/>
+    </g>
+    
+    <!-- Graduation Cap -->
+    <g fill="#FFFFFF">
+        <path d="M90 60 L150 60 L120 45 Z"/>
+        <rect x="117" y="45" width="6" height="15"/>
+        <circle cx="120" cy="43" r="3"/>
+    </g>
+    
+    <!-- Outer Glow Effect -->
+    <g fill="none" stroke="#FFFFFF" stroke-width="1" opacity="0.3">
+        <circle cx="120" cy="120" r="90"/>
+        <circle cx="120" cy="120" r="85"/>
+    </g>
+    
+    <!-- Decorative Elements -->
+    <g fill="#FFFFFF" opacity="0.6">
+        <circle cx="50" cy="100" r="2"/>
+        <circle cx="190" cy="100" r="2"/>
+        <circle cx="45" cy="120" r="2"/>
+        <circle cx="195" cy="120" r="2"/>
+    </g>
+    
+    <!-- Company Name -->
+    <text 
+        x="120" 
+        y="180" 
+        text-anchor="middle" 
+        font-family="Arial, sans-serif" 
+        font-size="24" 
+        font-weight="bold" 
+        fill="#FFFFFF"
+    >
+        EduManager
+    </text>
+    
+    <!-- Tagline -->
+    <text 
+        x="120" 
+        y="200" 
+        text-anchor="middle" 
+        font-family="Arial, sans-serif" 
+        font-size="14" 
+        fill="#F3F4F6"
+    >
+        Smart School Solutions
+    </text>
+</svg>

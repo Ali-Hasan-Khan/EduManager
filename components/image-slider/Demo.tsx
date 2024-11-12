@@ -11,7 +11,7 @@ export function ImagesSliderDemo() {
   ];
   return (
     <ImagesSlider
-      className="h-auto 1xl:h-[678px] md:h-[455px] xsm:h-75 2xsm:h-75"
+      className="h-full"
       images={images}
     >
       <motion.div

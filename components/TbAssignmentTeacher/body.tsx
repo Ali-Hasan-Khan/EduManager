@@ -16,19 +16,10 @@ const TbodyAssignment = async () => {
       {children}
     </a>
   );
-
-  console.log("results: ", result);
-  console.log("classrooms: ", classrooms);
-  console.log("lesson data: ", data);
-  console.log("Assignment Data: ",AssignmentData);
-  // console.log("assignment data object: ",AssignmentData.map((assingmentItem) => assingmentItem.lesson.map((lesson) => lesson.assingment.map((assignment) => assignment.classroom.name))));
-
+  
   return (
     <>
       <tbody>
-        <h1 className="text-2xl font-bold text-titlecolor dark:text-white">
-          Assignment
-          </h1>
         {AssignmentData.map((assingmentItem) =>
           assingmentItem.lesson.map((lesson) => (
             <tr key={`${lesson.id}-${lesson.name}`}>

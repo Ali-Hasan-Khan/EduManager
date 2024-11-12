@@ -127,7 +127,7 @@ export const SIDEBAR_ITEMS: SideNavItemGroup[] = [
       {
         allowedStatus: [UserStatus.ACTIVE],
         allowedRole: [UserRole.STUDENT],
-        title: "classroom",
+        title: "Classroom",
         path: "/student/classroom",
         icon: <PiCalendarCheck size={20} />,
       },
