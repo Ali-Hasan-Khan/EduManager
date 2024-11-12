@@ -1,4 +1,4 @@
-import { PrismaClient, UserRole, UserStatus } from "@prisma/client";
+import { PrismaClient, UserRole, UserStatus, UserGender } from "@prisma/client";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
@@ -7,6 +7,16 @@ const UserSchema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
   name: z.string().min(3, { message: "Name Min 3 Character" }),
   password: z.string().min(6, { message: "Password Min 6 Character" }),
+  gender: z.enum(
+    [
+      UserGender.MALE,
+      UserGender.FEMALE,
+      UserGender.UNKNOW,
+    ],
+    {
+      errorMap: () => ({ message: "Select Gender" }),
+    }
+  ),
   role: z.enum(
     [UserRole.ADMIN, UserRole.TEACHER, UserRole.STUDENT, UserRole.UNKNOW],
     {
@@ -46,9 +56,11 @@ export const POST = async (request: Request) => {
       data: {
         name: validatedData.name,
         email: validatedData.email,
+        gender: validatedData.gender as UserGender,
         role: validatedData.role as UserRole,
         status: validatedData.status as UserStatus,
         password: hashedPassword, // Menggunakan password yang telah dihash
+        emailVerified: new Date(),
       },
     });
 

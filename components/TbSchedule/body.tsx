@@ -35,7 +35,11 @@ const TbodySchedule = async (props: PageProps) => {
             </td>
             <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
               <p className="text-sm  text-black dark:text-white">
-                {schedule.day.toLocaleDateString()}
+                {schedule.day.toLocaleDateString("en-GB", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "2-digit",
+                })}
               </p>
             </td>
             <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
