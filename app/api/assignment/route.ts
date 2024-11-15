@@ -1,3 +1,7 @@
+export const config = {
+  runtime: 'edge',
+};
+
 import { PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { z } from "zod";
