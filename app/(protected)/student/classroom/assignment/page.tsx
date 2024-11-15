@@ -65,8 +65,6 @@ const UserList = async () => {
     ],
   }));
 
-  console.log("Teacher ID:", teacherId);
-  console.log("Assignments:", data);
 
 
   // const [classrooms] = await Promise.all([getAllClassrooms()]);
@@ -88,7 +86,6 @@ const UserList = async () => {
             <tbody>
               {data.map((assingmentItem) =>
                 assingmentItem.lesson.map((lesson) => (
-                  console.log(lesson),
                   <tr key={`${lesson.id}-${lesson.name}`}>
                     <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
                       <ul className="font-medium text-black dark:text-white py-5">
