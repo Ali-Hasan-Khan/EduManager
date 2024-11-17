@@ -35,37 +35,6 @@ async function main() {
     console.log('Admin user already exists, skipping...');
   }
 
-  // Create the teacher user
-  const teacherUser = await prisma.user.create({
-    data: {
-      name: 'Teacher User',
-      email: 'teacher@example.com',
-      emailVerified: new Date(),
-      image: null,
-      password: password,
-      role: UserRole.UNKNOW,
-      gender: UserGender.FEMALE,
-      isTwoFactorEnabled: false,
-      status: UserStatus.ACTIVE,
-    },
-  });
-
-  // Create the student user
-  const studentUser = await prisma.user.create({
-    data: {
-      name: 'Student User',
-      email: 'student@example.com',
-      emailVerified: new Date(),
-      image: null,
-      password: password,
-      role: UserRole.UNKNOW,
-      gender: UserGender.MALE,
-      isTwoFactorEnabled: false,
-      status: UserStatus.ACTIVE,
-    },
-  });
-
-  console.log('Teacher and student users created:', { teacherUser, studentUser });
 }
 
 main()

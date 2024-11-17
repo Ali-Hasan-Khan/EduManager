@@ -211,25 +211,25 @@ ALTER TABLE "Teachers" ADD CONSTRAINT "Teachers_userId_fkey" FOREIGN KEY ("userI
 ALTER TABLE "Students" ADD CONSTRAINT "Students_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "OnClassroom" ADD CONSTRAINT "OnClassroom_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Students"("userId") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "OnClassroom" ADD CONSTRAINT "OnClassroom_classroomId_fkey" FOREIGN KEY ("classroomId") REFERENCES "Classrooms"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "OnClassroom" ADD CONSTRAINT "OnClassroom_classroomId_fkey" FOREIGN KEY ("classroomId") REFERENCES "Classrooms"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "OnClassroom" ADD CONSTRAINT "OnClassroom_userId_fkey" FOREIGN KEY ("userId") REFERENCES "Students"("userId") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Lessons" ADD CONSTRAINT "Lessons_teacherId_fkey" FOREIGN KEY ("teacherId") REFERENCES "Teachers"("userId") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Schedule" ADD CONSTRAINT "Schedule_lessonId_fkey" FOREIGN KEY ("lessonId") REFERENCES "Lessons"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-
--- AddForeignKey
 ALTER TABLE "Schedule" ADD CONSTRAINT "Schedule_classId_fkey" FOREIGN KEY ("classId") REFERENCES "Classrooms"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Assignments" ADD CONSTRAINT "Assignments_lessonId_fkey" FOREIGN KEY ("lessonId") REFERENCES "Lessons"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "Schedule" ADD CONSTRAINT "Schedule_lessonId_fkey" FOREIGN KEY ("lessonId") REFERENCES "Lessons"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Assignments" ADD CONSTRAINT "Assignments_classId_fkey" FOREIGN KEY ("classId") REFERENCES "Classrooms"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
 ALTER TABLE "Assignments" ADD CONSTRAINT "Assignments_createBy_fkey" FOREIGN KEY ("createBy") REFERENCES "Teachers"("userId") ON DELETE CASCADE ON UPDATE CASCADE;
+
+-- AddForeignKey
+ALTER TABLE "Assignments" ADD CONSTRAINT "Assignments_lessonId_fkey" FOREIGN KEY ("lessonId") REFERENCES "Lessons"("id") ON DELETE CASCADE ON UPDATE CASCADE;
