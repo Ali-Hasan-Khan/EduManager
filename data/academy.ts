@@ -150,3 +150,29 @@ export const getAllAssignmets = async () => {
     await db.$disconnect();
   }
 };
+
+
+export const getClassroomsByStudentId = async (studentId: string) => {
+  try {
+    const classrooms = await db.onClassroom.findMany({
+      where: {
+        userId: studentId,
+      },
+      select: {
+        classroom: {
+          select: {
+            id: true,
+            name: true,
+            cap: true,
+          },
+        },
+      },
+    });
+
+    // Flatten the response to return an array of classrooms
+    return classrooms.map((entry) => entry.classroom);
+  } finally {
+    await db.$disconnect();
+  }
+};
+

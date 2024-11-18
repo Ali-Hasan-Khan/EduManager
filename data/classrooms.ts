@@ -44,3 +44,38 @@ export const getTotalUsersInClassroom = async ({
 
   return totalStudent;
 };
+
+
+export const getClassroomById = async (classroomId: string) => {
+  try {
+    const classroom = await db.classrooms.findUnique({
+      where: { id: classroomId },
+      select: {
+        id: true,
+        name: true,
+        cap: true,
+        studentOnclassroom: {
+          select: {
+            student: {
+              select: {
+                user: {
+                  select: {
+                    id: true,
+                    name: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return classroom;
+  } catch (error) {
+    console.error("Error fetching classroom data:", error);
+    throw new Error("Could not fetch classroom data");
+  } finally {
+    await db.$disconnect();
+  }
+};

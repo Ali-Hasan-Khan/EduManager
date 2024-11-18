@@ -47,3 +47,47 @@ export const fetchSchedules = async ({ take = 5, skip = 0 }) => {
     await db.$disconnect();
   }
 };
+
+
+
+export const getScheduleByClassId = async (classId: string) => {
+  try {
+    const schedules = await db.schedule.findMany({
+      where: {
+        classId: classId, // Filtering by classId
+      },
+      select: {
+        id: true,
+        lessonId: true,
+        classId: true,
+        day: true,
+        time: true,
+        classroom: {
+          select: {
+            name: true, // Classroom name
+          },
+        },
+        lesson: {
+          select: {
+            name: true, // Lesson name
+            teacher: {
+              select: {
+                id: true, // Teacher id
+                name: true, // Teacher name
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return schedules;
+  } catch (error) {
+    console.error("Error fetching schedules: ", error);
+    return [];
+  } finally {
+    await db.$disconnect();
+  }
+};
+
+

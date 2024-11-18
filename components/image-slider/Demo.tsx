@@ -5,9 +5,10 @@ import { ImagesSlider } from "../ui/image-slider";
 
 export function ImagesSliderDemo() {
   const images = [
-    "https://images.unsplash.com/photo-1485433592409-9018e83a1f0d?q=80&w=1814&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1483982258113-b72862e6cff6?q=80&w=3456&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    "https://images.unsplash.com/photo-1482189349482-3defd547e0e9?q=80&w=2848&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    "https://image.lexica.art/full_webp/80086880-d0cb-44ea-8854-82137fb0fb96",
+    "https://image.lexica.art/full_webp/445bfe59-8891-4961-9c08-deae0d5f293b",
+    "https://image.lexica.art/full_webp/008680dd-446e-4b39-830e-ac48ef6f9a4b",
+    "https://image.lexica.art/full_webp/c8921ece-1e50-4bff-b1b9-ab8ab20f937d",
   ];
   return (
     <ImagesSlider

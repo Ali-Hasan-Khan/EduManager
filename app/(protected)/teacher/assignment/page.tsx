@@ -11,9 +11,6 @@ const UserList = async () => {
     <div>
       <div className="rounded-sm border border-stroke bg-white px-5 pb-2.5 pt-6 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5 xl:pb-1">
         <div className="max-w-full overflow-x-auto">
-          <h1 className="text-2xl font-bold text-titlecolor dark:text-white">
-            Assignment
-          </h1>
           <Ad lessons={data} classrooms={classrooms} />
           <table className="w-full table-auto">
             <TbheadAssignment />

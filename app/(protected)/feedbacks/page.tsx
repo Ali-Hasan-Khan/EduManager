@@ -13,7 +13,7 @@ const Page = () => {
       <div>
         <a
           aria-label="Chat on WhatsApp"
-          href="https://wa.me/6282294400729"
+          href="https://wa.me/918808721779"
           style={{
             display: "inline-block",
             backgroundColor: "#25D366",
@@ -23,7 +23,7 @@ const Page = () => {
             textDecoration: "none",
             boxShadow: "0px 2px 5px rgba(0, 0, 0, 0.2)",
             transition: "transform 0.3s ease",
-            marginRight: "10px", // Tambahkan margin-right di sini
+            marginRight: "10px", 
           }}
           target="_blank"
           rel="noopener noreferrer"
@@ -32,7 +32,7 @@ const Page = () => {
         </a>
         <a
           aria-label="Email me"
-          href="mailto:aryaferdyansahxiii@gmail.com"
+          href="mailto:alihasank86@gmail.com"
           style={{
             display: "inline-block",
             backgroundColor: "#D44638",
