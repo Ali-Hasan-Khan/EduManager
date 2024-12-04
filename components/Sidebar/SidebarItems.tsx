@@ -37,7 +37,7 @@ export const SidebarItems = ({ item }: { item: SideNavItem }) => {
       {item.submenu ? (
         <div>
           <button
-            className="w-[17rem] group relative flex items-center gap-2.5 rounded-md pl-4 pr-8 my-2 py-4 ml-2 font-medium hover:text-bodydark1 text-black border border-blue-700 hover:border-bodydark1 bg-bodydark1 hover:bg-blue-700 dark:hover:bg-meta-4 dark:bg-meta-4 dark:border-boxdark dark:text-bodydark duration-300 ease-in-out "
+            className="w-[17rem] group relative flex items-center gap-2.5 rounded-md pl-4 pr-8 my-2 py-4 ml-1 font-medium hover:text-bodydark1 text-black border border-blue-700 hover:border-bodydark1 bg-bodydark1 hover:bg-blue-700 dark:hover:bg-meta-4 dark:bg-meta-4 dark:border-boxdark dark:text-bodydark duration-300 ease-in-out "
             onClick={toggleSubMenu}
           >
             <div>{item.icon}</div>

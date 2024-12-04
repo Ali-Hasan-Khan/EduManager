@@ -1,6 +1,6 @@
 ﻿# Introduction
 
-School Management System is a platform designed to assist school administration, teachers, and students in managing information and educational processes efficiently. Here are the key features of this system:
+EduManager is a platform designed to assist school administration, teachers, and students in managing information and educational processes efficiently. Here are the key features of this system:
 
 
 ## Admin Features
