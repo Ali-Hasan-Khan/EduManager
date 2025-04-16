@@ -1,18 +1,15 @@
 import bcrypt from "bcryptjs";
 import type { NextAuthConfig } from "next-auth";
 import Credentials from "next-auth/providers/credentials";
-// import Github from "next-auth/providers/github";
-// import Google from "next-auth/providers/google";
 import { db } from "@/lib/db";
 import { LoginSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
-import { UserStatus, UserRole } from "@prisma/client";
-import { PrismaAdapter } from "@auth/prisma-adapter";
+import { PrismaClient, UserRole, UserStatus } from "@prisma/client";
 import { getUserById } from "@/data/user";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 import { getAccountByUserId } from "./data/account";
 
-export default {
+export const authConfig = {
   pages: {
     signIn: "/auth/login",
     error: "/auth/error",
@@ -50,7 +47,7 @@ export default {
       // Allow OAuth without email verification
       if (account?.provider !== "credentials") return true;
 
-      const existingUser = await getUserById(user.id);
+      const existingUser = await getUserById(user.id ?? "");
 
       // Prevent sign in even without email verification
       if (!existingUser?.emailVerified) return true;
@@ -89,7 +86,7 @@ export default {
 
       if (session.user) {
         session.user.name = token.name;
-        session.user.email = token.email;
+        session.user.email = token.email ?? "";
         session.user.isOAuth = token.isOAuth as boolean;
       }
 
@@ -114,6 +111,5 @@ export default {
       return token;
     },
   },
-  adapter: PrismaAdapter(db),
   session: { strategy: "jwt" },
 } satisfies NextAuthConfig;

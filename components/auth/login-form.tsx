@@ -6,6 +6,9 @@ import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
+import { redirect } from "next/navigation";
+import { motion } from "framer-motion";
+import { Eye, EyeOff, Loader2 } from "lucide-react";
 
 import { LoginSchema } from "@/schemas";
 import { Input } from "@/components/ui/input";
@@ -34,6 +37,7 @@ export const LoginForm = () => {
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
   const [isPending, startTransition] = useTransition();
+  const [showPassword, setShowPassword] = useState(false);
 
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
@@ -57,78 +61,118 @@ export const LoginForm = () => {
 
           if (data?.success) {
             form.reset();
-            setSuccess(data.success);
+            setSuccess("Logging in...");
+            setTimeout(() => {
+              redirect("/home");
+            }, 1000);
+            window.location.reload();
           }
         })
-        .catch(() => setError("Something went wrong"));
+        .catch(() => setError("An unexpected error occurred. Please try again."));
     });
   };
 
   return (
-    <CardWrapper
-      headerLabel="Welcome"
-      backButtonLabel="Don't have an account?"
-      backButtonHref="/auth/register"
+    <motion.div
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
     >
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-          <div className="space-y-4">
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      disabled={isPending}
-                      placeholder="example@example.com"
-                      type="email"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
+      <CardWrapper
+        headerLabel="Welcome Back"
+        backButtonLabel="Don't have an account?"
+        backButtonHref="/auth/register"
+      >
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+            <div className="space-y-4">
+              <FormField
+                control={form.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-300">Email</FormLabel>
+                    <FormControl>
+                      <Input
+                        {...field}
+                        disabled={isPending}
+                        placeholder="john.doe@example.com"
+                        type="email"
+                        className="bg-gray-900/50 border-gray-800 text-white placeholder:text-gray-500 focus:border-primary focus:ring-primary"
+                      />
+                    </FormControl>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="password"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-gray-300">Password</FormLabel>
+                    <FormControl>
+                      <div className="relative">
+                        <Input
+                          {...field}
+                          disabled={isPending}
+                          placeholder="••••••••"
+                          type={showPassword ? "text" : "password"}
+                          className="bg-gray-900/50 border-gray-800 text-white placeholder:text-gray-500 focus:border-primary focus:ring-primary pr-10"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300"
+                        >
+                          {showPassword ? (
+                            <EyeOff className="h-4 w-4" />
+                          ) : (
+                            <Eye className="h-4 w-4" />
+                          )}
+                        </button>
+                      </div>
+                    </FormControl>
+                    <div className="flex items-center justify-between">
+                      <Button
+                        size="sm"
+                        variant="link"
+                        asChild
+                        className="px-0 font-normal text-gray-400 hover:text-gray-300"
+                      >
+                        <Link href="/auth/reset">Forgot password?</Link>
+                      </Button>
+                    </div>
+                    <FormMessage className="text-red-500" />
+                  </FormItem>
+                )}
+              />
+            </div>
+            <FormError message={error || urlError} />
+            <FormSuccess message={success} />
+            <Button
+              disabled={isPending}
+              type="submit"
+              className="w-full bg-primary hover:bg-primary/90 text-white transition-colors duration-300"
+            >
+              {isPending ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                "Sign In"
               )}
-            />
-            <FormField
-              control={form.control}
-              name="password"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      disabled={isPending}
-                      placeholder="******"
-                      type="password"
-                    />
-                  </FormControl>
-                  <Button
-                    size="sm"
-                    variant="link"
-                    asChild
-                    className="px-0 font-normal"
-                  >
-                    <Link href="/auth/reset">Forgot password?</Link>
-                  </Button>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-          <FormError message={error || urlError} />
-          <FormSuccess message={success} />
-          <Button
-            disabled={isPending}
-            type="submit"
-            className="w-full text-white"
-          >
-            Login
-          </Button>
-        </form>
-      </Form>
-    </CardWrapper>
+            </Button>
+            <Button
+              asChild
+              variant="ghost"
+              className="w-full text-gray-400 hover:text-gray-300 hover:bg-gray-900/50 transition-colors duration-300"
+            >
+              <Link href="/">
+                Back to Home
+              </Link>
+            </Button>
+          </form>
+        </Form>
+      </CardWrapper>
+    </motion.div>
   );
 };
