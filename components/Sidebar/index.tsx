@@ -6,6 +6,7 @@ import Image from "next/image";
 import { SIDEBAR_ITEMS } from "@/constants/index";
 import { useSideBarToggle } from "@/hooks/sidebar-toggle";
 import SideBarMenuGroup from "./SidebarGroup";
+import { Menu, PanelRightOpen } from "lucide-react";
 
 interface SidebarProps {
   sidebarOpen: boolean;
@@ -13,7 +14,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
-  const { toggleCollapse } = useSideBarToggle();
+  const { toggleCollapse, invokeToggleCollapse } = useSideBarToggle();
   const trigger = useRef<any>(null);
   const sidebar = useRef<any>(null);
 
@@ -59,54 +60,79 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
   }, [sidebarExpanded]);
 
   return (
-    <aside
-      ref={sidebar}
-      className={`absolute left-0 top-0 z-9999 flex h-screen w-72.5 flex-col overflow-y-hidden bg-blue-700 duration-300 ease-linear dark:bg-boxdark lg:static lg:translate-x-0 ${
-        sidebarOpen ? "translate-x-0" : "-translate-x-full"
-      }`}
-    >
-      {/* <!-- SIDEBAR HEADER --> */}
-      <div className="flex items-center justify-between gap-2 px-6 py-5.5 lg:py-6.5">
-        <Link href="/">
-          <Image
-            width={85}
-            height={82}
-            src={"./school-management-logo.svg"}
-            alt="Logo"
-            priority
-          />
-        </Link>
+    <>
+      {/* Overlay for mobile */}
+      {sidebarOpen && (
+        <div 
+          className="fixed inset-0 z-40 bg-black bg-opacity-25 backdrop-blur-sm lg:hidden"
+          onClick={() => setSidebarOpen(false)}
+        />
+      )}
+      
+      <aside
+        ref={sidebar}
+        className={`fixed left-0 top-0 z-50 flex h-screen flex-col overflow-hidden bg-white border-r border-stroke shadow-lg transition-all duration-300 ease-in-out dark:bg-boxdark dark:border-strokedark lg:static lg:translate-x-0 ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        } ${toggleCollapse ? "w-20" : "w-72"}`}
+      >
+        {/* Header */}
+        <div className="flex items-center justify-between border-b border-stroke px-6 py-4 dark:border-strokedark">
+          <Link href="/" className={`flex items-center space-x-3 ${toggleCollapse ? "justify-center" : ""}`}>
+            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary">
+              <Image
+                width={24}
+                height={24}
+                src={"./school-management-logo.svg"}
+                alt="Logo"
+                priority
+                className="text-white"
+              />
+            </div>
+            {!toggleCollapse && (
+              <div className="flex flex-col">
+                <span className="text-xl font-bold text-black dark:text-white">
+                  EduManager
+                </span>
+                <span className="text-xs text-body dark:text-bodydark2">
+                  Education Platform
+                </span>
+              </div>
+            )}
+          </Link>
 
-        <button
-          ref={trigger}
-          onClick={() => setSidebarOpen(!sidebarOpen)}
-          aria-controls="sidebar"
-          aria-expanded={sidebarOpen}
-          className="block text-white lg:hidden"
-        >
-          <svg
-            className="fill-current"
-            width="20"
-            height="18"
-            viewBox="0 0 20 18"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M19 8.175H2.98748L9.36248 1.6875C9.69998 1.35 9.69998 0.825 9.36248 0.4875C9.02498 0.15 8.49998 0.15 8.16248 0.4875L0.399976 8.3625C0.0624756 8.7 0.0624756 9.225 0.399976 9.5625L8.16248 17.4375C8.31248 17.5875 8.53748 17.7 8.76248 17.7C8.98748 17.7 9.17498 17.625 9.36248 17.475C9.69998 17.1375 9.69998 16.6125 9.36248 16.275L3.02498 9.8625H19C19.45 9.8625 19.825 9.4875 19.825 9.0375C19.825 8.55 19.45 8.175 19 8.175Z"
-              fill=""
-            />
-          </svg>
-        </button>
-      </div>
-      {/* <!-- SIDEBAR HEADER --> */}
+          {/* Toggle buttons */}
+          <div className="flex items-center space-x-2">
+            {/* Collapse toggle for desktop */}
+            <button
+              onClick={invokeToggleCollapse}
+              className="hidden lg:flex h-8 w-8 items-center justify-center rounded-lg text-body hover:bg-gray-2 hover:text-black dark:text-bodydark2 dark:hover:bg-meta-4 dark:hover:text-white transition-colors duration-200"
+              title={toggleCollapse ? "Expand sidebar" : "Collapse sidebar"}
+            >
+              <PanelRightOpen 
+                size={16} 
+                className={`transition-transform duration-200 ${toggleCollapse ? "rotate-180 overflow-visible" : ""}`}
+              />
+            </button>
 
-      <div className="no-scrollbar flex flex-col overflow-y-auto duration-300 ease-linear">
-        {SIDEBAR_ITEMS.map((item, idx) => {
-          return <SideBarMenuGroup key={idx} menuGroup={item} />;
-        })}
-      </div>
-    </aside>
+            {/* Close button for mobile */}
+            <button
+              ref={trigger}
+              onClick={() => setSidebarOpen(!sidebarOpen)}
+              className="flex h-8 w-8 items-center justify-center rounded-lg text-body hover:bg-gray-2 hover:text-black dark:text-bodydark2 dark:hover:bg-meta-4 dark:hover:text-white transition-colors duration-200 lg:hidden"
+            >
+              <Menu size={16} />
+            </button>
+          </div>
+        </div>
+
+        {/* Navigation */}
+        <nav className="flex-1 space-y-2 overflow-y-auto px-4 py-4">
+          {SIDEBAR_ITEMS.map((item, idx) => (
+            <SideBarMenuGroup key={idx} menuGroup={item} />
+          ))}
+        </nav>
+      </aside>
+    </>
   );
 };
 

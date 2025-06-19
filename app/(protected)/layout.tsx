@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import Header from "@/components/Header";
 import { Toaster } from "@/components/ui/toaster";
+import AuthErrorBoundary from '@/components/auth/AuthErrorBoundary';
+
 interface ProtectedLayoutProps {
   children: React.ReactNode;
 }
@@ -10,7 +12,7 @@ interface ProtectedLayoutProps {
 const ProtectedLayout = ({ children }: ProtectedLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   return (
-    <>
+    <AuthErrorBoundary>
       {/* <!-- ===== Page Wrapper Start ===== --> */}
       <div className="flex h-screen overflow-hidden">
         {/* <!-- ===== Sidebar Start ===== --> */}
@@ -35,7 +37,7 @@ const ProtectedLayout = ({ children }: ProtectedLayoutProps) => {
         {/* <!-- ===== Content Area End ===== --> */}
       </div>
       {/* <!-- ===== Page Wrapper End ===== --> */}
-    </>
+    </AuthErrorBoundary>
   );
 };
 

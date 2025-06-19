@@ -1,21 +1,26 @@
 import React from "react";
 import { Tablehd } from "@/types/table";
-
+import { Book } from "lucide-react";
 const tablehdDataUser: Tablehd[] = [
   {
     name: "Name",
+    icon: Book,
   },
   {
     name: "Email",
+    icon: Book,
   },
   {
     name: "Classroom",
+    icon: Book,
   },
   {
     name: "Status",
+    icon: Book,
   },
   {
     name: "Action",
+    icon: Book,
   },
 ];
 export const Tbheadstudent = () => {
@@ -40,6 +45,7 @@ export const Tbheadstudent = () => {
                           : ""
               }`}
             >
+              <tablehdItem.icon className="h-4 w-4" />
               {tablehdItem.name}
             </th>
           ))}

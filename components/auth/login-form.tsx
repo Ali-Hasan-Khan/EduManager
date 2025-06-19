@@ -6,7 +6,7 @@ import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 
@@ -27,6 +27,7 @@ import { FormSuccess } from "@/components/form-success";
 import { login } from "@/actions/login";
 
 export const LoginForm = () => {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl");
   const urlError =
@@ -51,24 +52,21 @@ export const LoginForm = () => {
     setError("");
     setSuccess("");
 
-    startTransition(() => {
-      login(values, callbackUrl)
-        .then((data) => {
-          if (data?.error) {
-            form.reset();
-            setError(data.error);
-          }
+    startTransition(async () => {
+      try {
+        const data = await login(values);
 
-          if (data?.success) {
-            form.reset();
-            setSuccess("Logging in...");
-            setTimeout(() => {
-              redirect("/home");
-            }, 1000);
-            window.location.reload();
-          }
-        })
-        .catch(() => setError("An unexpected error occurred. Please try again."));
+        if (data?.error) {
+          form.reset();
+          setError(data.error);
+          return;
+        }
+        form.reset();
+        setSuccess("Logging in...");
+        window.location.href = "/home";
+      } catch (err) {
+        setError("An unexpected error occurred. Please try again.");
+      }
     });
   };
 
@@ -98,7 +96,7 @@ export const LoginForm = () => {
                         disabled={isPending}
                         placeholder="john.doe@example.com"
                         type="email"
-                        className="bg-gray-900/50 border-gray-800 text-white placeholder:text-gray-500 focus:border-primary focus:ring-primary"
+                        className="bg-gray-900/50 border-gray-800 text-black placeholder:text-gray-500 focus:border-primary focus:ring-primary"
                       />
                     </FormControl>
                     <FormMessage className="text-red-500" />
@@ -118,7 +116,7 @@ export const LoginForm = () => {
                           disabled={isPending}
                           placeholder="••••••••"
                           type={showPassword ? "text" : "password"}
-                          className="bg-gray-900/50 border-gray-800 text-white placeholder:text-gray-500 focus:border-primary focus:ring-primary pr-10"
+                          className="bg-gray-900/50 border-gray-800 text-black placeholder:text-gray-500 focus:border-primary focus:ring-primary pr-10"
                         />
                         <button
                           type="button"

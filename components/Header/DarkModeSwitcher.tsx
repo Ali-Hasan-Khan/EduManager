@@ -1,38 +1,39 @@
+"use client";
+
 import useColorMode from "@/hooks/useColorMode";
-import { FaSun, FaMoon } from "react-icons/fa";
+import { Sun, Moon } from "lucide-react";
 
 const DarkModeSwitcher = () => {
   const [colorMode, setColorMode] = useColorMode();
 
   return (
-    <li>
-      <label
-        className={`relative m-0 block h-7.5 w-14 rounded-full ${
-          colorMode === "dark" ? "bg-primary" : "bg-stroke"
+    <button
+      onClick={() => {
+        if (typeof setColorMode === "function") {
+          setColorMode(colorMode === "light" ? "dark" : "light");
+        }
+      }}
+      className="relative flex h-9 w-9 items-center justify-center rounded-lg text-body hover:bg-gray-2 hover:text-black dark:text-bodydark2 dark:hover:bg-meta-4 dark:hover:text-white"
+      aria-label={colorMode === "dark" ? "Switch to light mode" : "Switch to dark mode"}
+    >
+      {/* Sun icon */}
+      <Sun 
+        className={`h-5 w-5 transition-all duration-200 ${
+          colorMode === "dark" 
+            ? "rotate-0 scale-100" 
+            : "absolute rotate-90 scale-0"
         }`}
-      >
-        <input
-          type="checkbox"
-          onChange={() => {
-            if (typeof setColorMode === "function") {
-              setColorMode(colorMode === "light" ? "dark" : "light");
-            }
-          }}
-          className="dur absolute top-0 z-50 m-0 h-full w-full cursor-pointer opacity-0"
-        />
-        <span
-          className={`absolute left-[3px] top-1/2 flex h-6 w-6 -translate-y-1/2 translate-x-0 items-center justify-center rounded-full bg-white shadow-switcher duration-75 ease-linear 
-          ${colorMode === "dark" && "right-[3px] translate-x-full"}`}
-        >
-          <span className="dark:hidden">
-            <FaSun />
-          </span>
-          <span className="hidden dark:inline-block">
-            <FaMoon />
-          </span>
-        </span>
-      </label>
-    </li>
+      />
+      
+      {/* Moon icon */}
+      <Moon 
+        className={`h-5 w-5 transition-all duration-200 ${
+          colorMode === "dark"
+            ? "absolute rotate-90 scale-0"
+            : "rotate-0 scale-100"
+        }`}
+      />
+    </button>
   );
 };
 

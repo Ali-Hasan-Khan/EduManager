@@ -1,24 +1,31 @@
 import React from "react";
 import { Tablehd } from "@/types/table";
-
+import { Book } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 const tablehdDataSchedule: Tablehd[] = [
   {
     name: "Lesson",
+    icon: Book,
   },
   {
     name: "Classroom",
+    icon: Book,
   },
   {
     name: "Teacher",
+    icon: Book,
   },
   {
     name: "Day",
+    icon: Book,
   },
   {
     name: "Time",
+    icon: Book,
   },
   {
     name: "Actions",
+    icon: MoreHorizontal,
   },
 ];
 export const TbheadSchedule = () => {
@@ -45,6 +52,7 @@ export const TbheadSchedule = () => {
                             : ""
               }`}
             >
+              <tablehdItem.icon className="h-4 w-4" />
               {tablehdItem.name}
             </th>
           ))}

@@ -1,6 +1,9 @@
 "use client";
 import React, { useState } from "react";
 import CardDataStats from "../CardDataStats";
+import { UserIcon, BookOpenIcon, GraduationCapIcon } from "lucide-react";
+import { StatisticCard } from "@/components/Dashboard/StatisticCard";
+import { ProgressCard } from "@/components/Dashboard/ProgressCard";
 
 import { RoleGate } from "@/components/auth/role-gate";
 import { UserRole } from "@prisma/client";
@@ -102,8 +105,32 @@ const Dashboard: React.FC<DashboardProps> = ({ totalDataCard }) => {
         </RoleGate>
       </div>
 
-      <div className="mt-4 grid grid-cols-12 gap-4 md:mt-6 md:gap-6 2xl:mt-7.5 2xl:gap-7.5">
-        {/* ADD Dashboar Component Here */}
+      <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+        <CardDataStats
+          title="Total Students"
+          total="2,345"
+          rate="+23.45%"
+          levelUp
+          variant="primary"
+        >
+          <UserIcon className="h-6 w-6" />
+        </CardDataStats>
+
+        <StatisticCard
+          title="Active Classes"
+          value={42}
+          icon={<BookOpenIcon className="h-6 w-6 text-primary" />}
+          trend={{ value: 12, isUpward: true }}
+          description="12% increase from last month"
+        />
+
+        <ProgressCard
+          title="Course Completion"
+          progress={75}
+          total={100}
+          icon={<GraduationCapIcon className="h-6 w-6 text-primary" />}
+          variant="success"
+        />
       </div>
     </>
   );

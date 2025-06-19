@@ -39,8 +39,7 @@ export const demoLogin = async () => {
         {
           email: "demo@edumanager.com",
           password: "123456",
-        },
-        undefined
+        }
       );
 
       // If we get here, the login was successful (NEXT_REDIRECT is handled by Next.js)

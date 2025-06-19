@@ -16,100 +16,126 @@ export const authConfig = {
   },
   events: {
     async linkAccount({ user }) {
-      await db.user.update({
-        where: { id: user.id },
-        data: { emailVerified: new Date() },
-      });
+      try {
+        await db.user.update({
+          where: { id: user.id },
+          data: { emailVerified: new Date() },
+        });
+      } catch (error) {
+        console.error("Error linking account:", error);
+      }
     },
   },
   providers: [
     Credentials({
       async authorize(credentials) {
-        const validatedFields = LoginSchema.safeParse(credentials);
+        try {
+          const validatedFields = LoginSchema.safeParse(credentials);
 
-        if (validatedFields.success) {
-          const { email, password } = validatedFields.data;
+          if (validatedFields.success) {
+            const { email, password } = validatedFields.data;
 
-          const user = await getUserByEmail(email);
-          if (!user || !user.password) return null;
+            const user = await getUserByEmail(email);
+            if (!user || !user.password) return null;
 
-          const passwordsMatch = await bcrypt.compare(password, user.password);
+            const passwordsMatch = await bcrypt.compare(password, user.password);
 
-          if (passwordsMatch) return user;
+            if (passwordsMatch) return user;
+          }
+
+          return null;
+        } catch (error) {
+          console.error("Authorization error:", error);
+          return null;
         }
-
-        return null;
       },
     }),
   ],
   callbacks: {
     async signIn({ user, account }) {
-      // Allow OAuth without email verification
-      if (account?.provider !== "credentials") return true;
+      try {
+        // Allow OAuth without email verification
+        if (account?.provider !== "credentials") return true;
 
-      const existingUser = await getUserById(user.id ?? "");
+        const existingUser = await getUserById(user.id ?? "");
 
-      // Prevent sign in even without email verification
-      if (!existingUser?.emailVerified) return true;
+        // Prevent sign in even without email verification
+        if (!existingUser?.emailVerified) return true;
 
-      if (existingUser.isTwoFactorEnabled) {
-        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
-          existingUser.id
-        );
+        if (existingUser.isTwoFactorEnabled) {
+          const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(
+            existingUser.id
+          );
 
-        if (!twoFactorConfirmation) return false;
+          if (!twoFactorConfirmation) return false;
 
-        // Delete two factor confirmation for next sign in
-        await db.twoFactorConfirmation.delete({
-          where: { id: twoFactorConfirmation.id },
-        });
+          // Delete two factor confirmation for next sign in
+          await db.twoFactorConfirmation.delete({
+            where: { id: twoFactorConfirmation.id },
+          });
+        }
+
+        return true;
+      } catch (error) {
+        console.error("SignIn callback error:", error);
+        return false;
       }
-
-      return true;
     },
     async session({ token, session }) {
-      if (token.sub && session.user) {
-        session.user.id = token.sub;
-      }
+      try {
+        if (token.sub && session.user) {
+          session.user.id = token.sub;
+        }
 
-      if (token.role && session.user) {
-        session.user.role = token.role as UserRole;
-      }
-      
-      if (token.status && session.user) {
-        session.user.status = token.status as UserStatus;
-      }
+        if (token.role && session.user) {
+          session.user.role = token.role as UserRole;
+        }
+        
+        if (token.status && session.user) {
+          session.user.status = token.status as UserStatus;
+        }
 
-      if (session.user) {
-        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
-      }
+        if (session.user) {
+          session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+        }
 
-      if (session.user) {
-        session.user.name = token.name;
-        session.user.email = token.email ?? "";
-        session.user.isOAuth = token.isOAuth as boolean;
-      }
+        if (session.user) {
+          session.user.name = token.name;
+          session.user.email = token.email ?? "";
+          session.user.isOAuth = token.isOAuth as boolean;
+        }
 
-      return session;
+        return session;
+      } catch (error) {
+        console.error("Session callback error:", error);
+        return session;
+      }
     },
     async jwt({ token }) {
-      if (!token.sub) return token;
+      try {
+        if (!token.sub) return token;
 
-      const existingUser = await getUserById(token.sub);
+        const existingUser = await getUserById(token.sub);
 
-      if (!existingUser) return token;
+        if (!existingUser) return token;
 
-      const existingAccount = await getAccountByUserId(existingUser.id);
+        const existingAccount = await getAccountByUserId(existingUser.id);
 
-      token.isOAuth = !!existingAccount;
-      token.name = existingUser.name;
-      token.email = existingUser.email;
-      token.role = existingUser.role;
-      token.status = existingUser.status;
-      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
+        token.isOAuth = !!existingAccount;
+        token.name = existingUser.name;
+        token.email = existingUser.email;
+        token.role = existingUser.role;
+        token.status = existingUser.status;
+        token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
 
-      return token;
+        return token;
+      } catch (error) {
+        console.error("JWT callback error:", error);
+        return token;
+      }
     },
   },
   session: { strategy: "jwt" },
+  debug: process.env.NODE_ENV === "development",
+  trustHost: true,
 } satisfies NextAuthConfig;

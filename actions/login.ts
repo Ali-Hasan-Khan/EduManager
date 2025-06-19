@@ -9,7 +9,6 @@ import { LoginSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
 import { getTwoFactorTokenByEmail } from "@/data/two-factor-token";
 import { sendVerificationEmail, sendTwoFactorTokenEmail } from "@/lib/mail";
-import { AFTER_LOGIN_URL } from "@/routes";
 import {
   generateVerificationToken,
   generateTwoFactorToken,
@@ -17,8 +16,7 @@ import {
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 
 export const login = async (
-  values: z.infer<typeof LoginSchema>,
-  callbackUrl?: string | null
+  values: z.infer<typeof LoginSchema>
 ) => {
   const validatedFields = LoginSchema.safeParse(values);
 
@@ -96,9 +94,10 @@ export const login = async (
     await signIn("credentials", {
       email,
       password,
-      redirectTo: callbackUrl || AFTER_LOGIN_URL,
     });
-    console.log("User logged in:", existingUser);
+    
+    return { success: "Login successful" };
+    
   } catch (error) {
     if (error instanceof AuthError) {
       switch (error.type) {

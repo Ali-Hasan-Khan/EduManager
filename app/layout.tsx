@@ -12,24 +12,32 @@ export const metadata: Metadata = {
   description: "Built with nextjs",
 };
 
+
 export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const session = await auth();
+  let session;
+  
+  try {
+    session = await auth();
+  } catch (error) {
+    console.error("Auth error in layout:", error);
+    session = null;
+  }
 
   return (
-    <SessionProvider session={session}>
-      <html lang="en">
-        <body className={inter.className}>
+    <html lang="en">
+      <body className={inter.className}>
+        <SessionProvider session={session}>
           <div className="dark:bg-boxdark-2 dark:text-bodydark">
             <NextTopLoader />
             {children}
             <Toaster />
           </div>
-        </body>
-      </html>
-    </SessionProvider>
+        </SessionProvider>
+      </body>
+    </html>
   );
 }

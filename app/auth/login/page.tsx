@@ -1,7 +1,12 @@
 import { LoginForm } from "@/components/auth/login-form";
+import { Suspense } from "react";
 
-const LoginPage = () => {
-  return <LoginForm />;
-};
+export const dynamic = "force-dynamic";
 
-export default LoginPage;
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <LoginForm />
+    </Suspense>
+  );
+}

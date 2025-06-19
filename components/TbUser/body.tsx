@@ -5,68 +5,223 @@ import { PageProps } from "@/types/pagination";
 import Pagination from "../pagination/pagination";
 import Search from "../Search/search";
 import { fetchUsers } from "@/data/users";
+import { Badge } from "@/components/ui/badge";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { 
+  User, 
+  Mail, 
+  Shield, 
+  Activity,
+  Edit2, 
+  Trash2,
+  MoreHorizontal,
+  Calendar,
+  Clock
+} from "lucide-react";
+
 export type FetcLessonsType = typeof fetchUsers;
+
 const TbodyUser = async (props: PageProps) => {
-  const pageNumber = Number(props?.searchParams?.page || 1); // Get the page number. Default to 1 if not provided.
-  const take = 5;
+  const pageNumber = Number(props?.searchParams?.page || 1);
+  const take = 12; // Increased for better dashboard feel
   const skip = (pageNumber - 1) * take;
   const search =
     typeof props?.searchParams?.search === "string"
       ? props?.searchParams?.search
       : undefined;
+  
   const { data, metadata } = await fetchUsers({ take, skip, query: search });
+
+  const getStatusBadge = (status: string) => {
+    const statusConfig = {
+      ACTIVE: {
+        className: "bg-emerald-50 text-emerald-700 border-emerald-200 dark:bg-emerald-950 dark:text-emerald-400 dark:border-emerald-800",
+        dot: "bg-emerald-500"
+      },
+      IN_ACTIVE: {
+        className: "bg-amber-50 text-amber-700 border-amber-200 dark:bg-amber-950 dark:text-amber-400 dark:border-amber-800",
+        dot: "bg-amber-500"
+      },
+      BANNED: {
+        className: "bg-red-50 text-red-700 border-red-200 dark:bg-red-950 dark:text-red-400 dark:border-red-800",
+        dot: "bg-red-500"
+      }
+    };
+
+    const config = statusConfig[status as keyof typeof statusConfig] || statusConfig.IN_ACTIVE;
+    
+    return (
+      <div className="flex items-center gap-2">
+        <div className={`w-2 h-2 rounded-full ${config.dot}`} />
+        <span className="text-xs font-medium capitalize">
+          {status.replace(/_/g, " ").toLowerCase()}
+        </span>
+      </div>
+    );
+  };
+
+  const getRoleBadge = (role: string) => {
+    const roleConfig = {
+      TEACHER: {
+        className: "bg-blue-50 text-blue-700 border-blue-200 dark:bg-blue-950 dark:text-blue-400 dark:border-blue-800",
+        icon: "👨‍🏫"
+      },
+      STUDENT: {
+        className: "bg-purple-50 text-purple-700 border-purple-200 dark:bg-purple-950 dark:text-purple-400 dark:border-purple-800",
+        icon: "👨‍🎓"
+      },
+      ADMIN: {
+        className: "bg-slate-50 text-slate-700 border-slate-200 dark:bg-slate-950 dark:text-slate-400 dark:border-slate-800",
+        icon: "👨‍💼"
+      }
+    };
+
+    const config = roleConfig[role as keyof typeof roleConfig] || roleConfig.STUDENT;
+    
+    return (
+      <div className="flex items-center gap-2">
+        <span className="text-sm">{config.icon}</span>
+        <span className="text-xs font-medium capitalize">
+          {role.toLowerCase()}
+        </span>
+      </div>
+    );
+  };
+
+  const getInitials = (name: string) => {
+    return name
+      .split(' ')
+      .map(word => word.charAt(0))
+      .join('')
+      .toUpperCase()
+      .slice(0, 2);
+  };
+
+  const getRandomColor = (name: string) => {
+    const colors = [
+      'from-blue-500 to-blue-600',
+      'from-purple-500 to-purple-600',
+      'from-emerald-500 to-emerald-600',
+      'from-orange-500 to-orange-600',
+      'from-pink-500 to-pink-600',
+      'from-indigo-500 to-indigo-600',
+      'from-teal-500 to-teal-600',
+      'from-rose-500 to-rose-600'
+    ];
+    const index = name.charCodeAt(0) % colors.length;
+    return colors[index];
+  };
+
   return (
     <>
-      <tbody>
+      <tbody className="divide-y divide-gray-100 dark:divide-gray-800">
         {data.map((user) => (
-          <tr key={user.id}>
-            <td className="border-b border-[#eee] px-4 py-5 pl-9 dark:border-strokedark xl:pl-11">
-              <h5 className="font-medium text-black dark:text-white">
-                {user.name}
-              </h5>
+          <tr 
+            key={user.id}
+            className="hover:bg-gray-50/50 dark:hover:bg-gray-800/30 transition-all duration-200 group"
+          >
+            <td className="px-6 py-4 xl:pl-8">
+              <div className="flex items-center gap-4">
+                <Avatar className="h-12 w-12 ring-2 ring-gray-100 dark:ring-gray-800">
+                  <AvatarFallback className={`bg-gradient-to-br ${getRandomColor(user.name || 'U')} text-white font-semibold text-sm`}>
+                    {getInitials(user.name || 'U')}
+                  </AvatarFallback>
+                </Avatar>
+                <div className="flex-1 min-w-0">
+                  <h4 className="text-sm font-semibold text-gray-900 dark:text-white truncate group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    {user.name}
+                  </h4>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
+                      {user.id.slice(0, 8)}...
+                    </span>
+                    <div className="w-1 h-1 bg-gray-300 dark:bg-gray-600 rounded-full" />
+                    <span className="text-xs text-gray-500 dark:text-gray-400">
+                      Member
+                    </span>
+                  </div>
+                </div>
+              </div>
             </td>
-            <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-              <p className="text-sm  text-black dark:text-white">
-                {user.email}
-              </p>
+            
+            <td className="px-6 py-4">
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-2">
+                  <Mail className="h-3.5 w-3.5 text-gray-400" />
+                  <span className="text-sm text-gray-700 dark:text-gray-300 font-medium truncate max-w-[180px]">
+                    {user.email}
+                  </span>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-gray-500 dark:text-gray-400">
+                  <Calendar className="h-3 w-3" />
+                  <span>Joined recently</span>
+                </div>
+              </div>
             </td>
-            <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-              <p className="text-sm text-black dark:text-white">
-                {user.role &&
-                  user.role.charAt(0).toUpperCase() +
-                    user.role.slice(1).toLowerCase()}
-              </p>
+            
+            <td className="px-6 py-4">
+              <div className="inline-flex items-center px-2.5 py-1 rounded-full border text-xs font-medium">
+                {getRoleBadge(user.role)}
+              </div>
             </td>
-            <td
-              className={`border-b border-[#eee] px-4 py-5 dark:border-strokedark 
-              ${
-                user.status === "ACTIVE"
-                  ? "text-green-500 dark:text-green-300"
-                  : user.status === "IN_ACTIVE"
-                    ? "text-yellow-500 dark:text-yellow-300"
-                    : user.status === "BANNED"
-                      ? "text-red dark:text-red"
-                      : "text-black dark:text-white"
-              }`}
-            >
-              <p className="text-sm">{user.status.replace(/_/g, " ")}</p>
+            
+            <td className="px-6 py-4">
+              <div className="inline-flex items-center px-2.5 py-1 rounded-full border text-xs font-medium">
+                {getStatusBadge(user.status)}
+              </div>
             </td>
 
-            <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
-              <div className="flex items-center space-x-3.5">
-                <Del user={user} />
+            <td className="px-6 py-4">
+              <div className="flex items-center justify-center gap-1">
                 <Edt user={user} />
+                <Del user={user} />
+                <button className="p-1.5 text-gray-400 hover:text-gray-600 dark:hover:text-gray-300 transition-colors rounded-md hover:bg-gray-100 dark:hover:bg-gray-800">
+                  <MoreHorizontal className="h-4 w-4" />
+                </button>
               </div>
             </td>
           </tr>
         ))}
       </tbody>
+      
+      {data.length === 0 && (
+        <tbody>
+          <tr>
+            <td colSpan={5} className="px-6 py-16 text-center">
+              <div className="flex flex-col items-center gap-4">
+                <div className="h-20 w-20 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                  <User className="h-10 w-10 text-gray-400" />
+                </div>
+                <div className="max-w-sm">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+                    No users found
+                  </h3>
+                  <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed">
+                    {search 
+                      ? `No users match "${search}". Try adjusting your search terms.`
+                      : "Get started by adding your first user to the system."
+                    }
+                  </p>
+                </div>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      )}
+      
       <tfoot>
         <tr>
-          <td className="py-5" colSpan={7}>
-            <div className="flex items-center space-x-3.5">
-              <Pagination {...metadata} />
-              <Search search={search} />
+          <td className="py-6" colSpan={5}>
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="text-sm text-gray-500 dark:text-gray-400">
+                Showing <span className="font-medium">{skip + 1}</span> to{" "}
+                <span className="font-medium">{Math.min(skip + data.length, metadata.totalPages)}</span> of{" "}
+                <span className="font-medium">{metadata.totalPages}</span> users
+              </div>
+              <div className="flex items-center gap-4">
+                <Search search={search} />
+                <Pagination {...metadata} />
+              </div>
             </div>
           </td>
         </tr>
