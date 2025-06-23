@@ -4,7 +4,7 @@ import Credentials from "next-auth/providers/credentials";
 import { db } from "@/lib/db";
 import { LoginSchema } from "@/schemas";
 import { getUserByEmail } from "@/data/user";
-import { PrismaClient, UserRole, UserStatus } from "@prisma/client";
+import { UserRole, UserStatus } from "@prisma/client";
 import { getUserById } from "@/data/user";
 import { getTwoFactorConfirmationByUserId } from "@/data/two-factor-confirmation";
 import { getAccountByUserId } from "./data/account";
@@ -135,7 +135,7 @@ export const authConfig = {
       }
     },
   },
-  session: { strategy: "jwt" },
+  session: { strategy: "jwt", maxAge: 20*60 },
   debug: process.env.NODE_ENV === "development",
   trustHost: true,
 } satisfies NextAuthConfig;

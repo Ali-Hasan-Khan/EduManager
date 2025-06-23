@@ -114,7 +114,7 @@ const Edt = ({ user }: { user: User }) => {
       </Button>
 
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="dark:bg-black bg-white sm:max-w-[500px]">
+        <DialogContent className="sm:max-w-[500px] dark:bg-black bg-white">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-lg">
               <User className="h-5 w-5 text-blue-600" />
@@ -132,14 +132,14 @@ const Edt = ({ user }: { user: User }) => {
                 Full Name
               </Label>
               <Input
-                id="name"
-                type="text"
+                      id="name"
+                      type="text"
                 placeholder="Enter full name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                 className="h-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 required
-              />
+                    />
             </div>
 
             <div className="space-y-3">
@@ -148,15 +148,15 @@ const Edt = ({ user }: { user: User }) => {
                 Email Address
               </Label>
               <Input
-                id="email"
-                type="email"
+                      id="email"
+                      type="email"
                 placeholder="Enter email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                 className="h-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                 required
               />
-            </div>
+                </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-3">
@@ -174,7 +174,7 @@ const Edt = ({ user }: { user: User }) => {
                     <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
                   </SelectContent>
                 </Select>
-              </div>
+                </div>
 
               <div className="space-y-3">
                 <Label htmlFor="status" className="flex items-center gap-2 text-sm font-medium">
@@ -213,7 +213,7 @@ const Edt = ({ user }: { user: User }) => {
                   <>
                     <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     Updating...
-                  </>
+        </>
                 ) : (
                   <>
                     <Save className="mr-2 h-4 w-4" />

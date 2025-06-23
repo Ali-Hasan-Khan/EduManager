@@ -6,13 +6,14 @@ import { useToast } from "@/components/ui/use-toast";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
-  DialogHeader,
-  DialogTitle,
   DialogDescription,
   DialogFooter,
+  DialogHeader,
+  DialogTitle,
 } from "@/components/ui/dialog";
-import { Trash2, Loader2, UserX } from "lucide-react";
+import { Trash2, Loader2, AlertTriangle, UserX } from "lucide-react";
 
 type User = {
   id: string;
@@ -67,7 +68,7 @@ const Del = ({ user }: { user: User }) => {
       </Button>
 
       <Dialog open={showModal} onOpenChange={setShowModal}>
-        <DialogContent className="sm:max-w-[450px]">
+        <DialogContent className="sm:max-w-[450px] dark:bg-black bg-white">
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-lg">
               <UserX className="h-5 w-5 text-red-600" />
@@ -80,6 +81,9 @@ const Del = ({ user }: { user: User }) => {
           </DialogHeader>
           
           <DialogFooter className="gap-3 pt-4">
+            <DialogClose disabled={isLoading} className="flex-1 sm:flex-none">
+              Cancel
+            </DialogClose>
             <Button
               onClick={handleDelete}
               disabled={isLoading}
@@ -93,7 +97,7 @@ const Del = ({ user }: { user: User }) => {
               ) : (
                 <>
                   <Trash2 className="mr-2 h-4 w-4" />
-                  Delete User
+                    Delete User
                 </>
               )}
             </Button>

@@ -1,9 +1,12 @@
 import { db } from "@/lib/db";
 
-export const fetchStudents = async ({ take = 5, skip = 0 }) => {
+export const fetchStudents = async ({ take = 5, skip = 0, query }: { take: number; skip: number; query?: string }) => {
   "use server";
   try {
     const results = await db.students.findMany({
+      where: {
+        name: { contains: query, mode: "insensitive" },
+      },
       relationLoadStrategy: "join",
       skip,
       take,
@@ -32,7 +35,11 @@ export const fetchStudents = async ({ take = 5, skip = 0 }) => {
       },
     });
 
-    const total = await db.students.count();
+    const total = await db.students.count({
+      where: {
+        name: { contains: query, mode: "insensitive" },
+      },
+    });
 
     return {
       data: results,

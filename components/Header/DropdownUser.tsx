@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { LogoutButton } from "./Logoutbtn";
+import { LogoutButton } from "@/components/auth/logout-button";
 import Image from "next/image";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { ChevronDown, User, Settings, LogOut } from "lucide-react";

@@ -1,50 +1,55 @@
 import React from "react";
 import { Tablehd } from "@/types/table";
-import { Book } from "lucide-react";
-const tablehdDataUser: Tablehd[] = [
+import { Users, Mail, User, Activity } from "lucide-react";
+
+const tablehdDataTeacher: Tablehd[] = [
   {
-    name: "Name",
-    icon: Book,
+    name: "Teacher",
+    icon: Users,
   },
   {
-    name: "Email",
-    icon: Book,
+    name: "Contact",
+    icon: Mail,
   },
   {
     name: "Gender",
-    icon: Book,
+    icon: User,
   },
   {
     name: "Status",
-    icon: Book,
+    icon: Activity,
   },
 ];
+
 export const Tbheadteacher = () => {
   return (
-    <>
-      <thead>
-        <tr className="bg-blue-700 text-left dark:bg-meta-4">
-          {tablehdDataUser.map((tablehdItem, key) => (
+    <thead>
+      <tr className="border-b border-gray-100 dark:border-gray-800">
+        {tablehdDataTeacher.map((tablehdItem, key) => {
+          const IconComponent = tablehdItem.icon;
+          return (
             <th
               key={key}
-              className={`font-medium text-white dark:text-white ${
-                tablehdItem.name === "Name"
-                  ? "min-w-[220px] px-4 py-4 xl:pl-11"
-                  : tablehdItem.name === "Email"
-                    ? "min-w-[150px] px-4 py-4"
+              className={`font-medium text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wider py-4 ${
+                tablehdItem.name === "Teacher"
+                  ? "min-w-[300px] px-6 xl:pl-8 text-left"
+                  : tablehdItem.name === "Contact"
+                    ? "min-w-[240px] px-6 text-left"
                     : tablehdItem.name === "Gender"
-                      ? "min-w-[150px] px-4 py-4"
+                      ? "min-w-[120px] px-6 text-left"
                       : tablehdItem.name === "Status"
-                        ? " min-w-[120px] px-4 py-4"
-                        : ""
+                        ? "min-w-[120px] px-6 text-left"
+                        : "px-6 text-left"
               }`}
             >
-              <tablehdItem.icon className="h-4 w-4" />
-              {tablehdItem.name}
+              <div className="flex items-center gap-2">
+                <IconComponent className="h-3.5 w-3.5 text-gray-400" />
+                <span className="font-semibold">{tablehdItem.name}</span>
+              </div>
             </th>
-          ))}
-        </tr>
-      </thead>
-    </>
+          );
+        })}
+      </tr>
+    </thead>
   );
 };

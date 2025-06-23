@@ -1,7 +1,6 @@
 "use server";
 
 import { db } from "@/lib/db";
-import { login } from "./login";
 import bcrypt from "bcryptjs";
 
 export const demoLogin = async () => {
@@ -33,32 +32,8 @@ export const demoLogin = async () => {
       }
     }
 
-    // Login with demo credentials
-    try {
-      const loginResult = await login(
-        {
-          email: "demo@edumanager.com",
-          password: "123456",
-        }
-      );
-
-      // If we get here, the login was successful (NEXT_REDIRECT is handled by Next.js)
-      return { success: "Successfully logged in as demo user!" };
-    } catch (loginError) {
-      // Check if the error is a redirect (success case)
-      if (loginError instanceof Error && loginError.message.includes("NEXT_REDIRECT")) {
-        return { success: "Successfully logged in as demo user!" };
-      }
-      
-      console.error("Error during demo login:", loginError);
-      return { error: "Failed to login with demo credentials. Please try again." };
-    }
+    return { success: "Demo user ready for login" };
   } catch (error) {
-    // Check if the error is a redirect (success case)
-    if (error instanceof Error && error.message.includes("NEXT_REDIRECT")) {
-      return { success: "Successfully logged in as demo user!" };
-    }
-    
     console.error("Unexpected error during demo login:", error);
     return { error: "An unexpected error occurred. Please try again later." };
   }

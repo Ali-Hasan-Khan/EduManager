@@ -10,6 +10,7 @@ import { demoLogin } from "@/actions/demo-login";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { toast } from "sonner";
+import { signIn } from "next-auth/react";
 
 export function HeroSection() {
   const router = useRouter();
@@ -18,6 +19,8 @@ export function HeroSection() {
   const onDemoLogin = async () => {
     try {
       setIsLoading(true);
+      
+      // First ensure demo user exists
       const result = await demoLogin();
       
       if (result?.error) {
@@ -25,8 +28,22 @@ export function HeroSection() {
         return;
       }
       
-      toast.success("Demo login successful!");
-      window.location.href = "/home";
+      // Then use client-side signIn
+      const signInResult = await signIn("credentials", {
+        email: "demo@edumanager.com",
+        password: "123456",
+        redirect: false,
+      });
+
+      if (signInResult?.error) {
+        toast.error("Demo login failed. Please try again.");
+        return;
+      }
+
+      if (signInResult?.ok) {
+        toast.success("Demo login successful!");
+        window.location.href = "/home";
+      }
     } catch (error) {
       toast.error("Something went wrong!");
     } finally {
