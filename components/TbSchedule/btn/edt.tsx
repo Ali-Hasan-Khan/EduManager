@@ -4,6 +4,25 @@ import { useState, SyntheticEvent } from "react";
 import { useRouter } from "next/navigation";
 import { Lessons, Classrooms } from "@prisma/client";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Edit, Loader2, Calendar } from "lucide-react";
 
 type Schedule = {
   id: string;
@@ -11,7 +30,14 @@ type Schedule = {
   classId: string;
   day: Date;
   time: string;
+  lesson?: {
+    name: string;
+  };
+  classroom?: {
+    name: string;
+  };
 };
+
 interface EdtProps {
   lessons: Lessons[];
   classrooms: Classrooms[];
@@ -29,6 +55,7 @@ const Edt = ({ schedule, lessons, classrooms }: EdtProps) => {
   const [lessonId, setLesson] = useState(schedule.lessonId || "");
   const [classId, setClass] = useState(schedule.classId || "");
   const router = useRouter();
+
   const handleUpdate = async (e: SyntheticEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -50,8 +77,11 @@ const Edt = ({ schedule, lessons, classrooms }: EdtProps) => {
         classId: classId,
       });
       toast({
-        description: "Schedule Edit successfully",
+        title: "Schedule Updated Successfully",
+        description: "Schedule details have been updated.",
       });
+      setShowModal(false);
+      router.refresh();
     } catch (error: any) {
       let errorMessage = "An error occurred";
       if (error.response && error.response.data && error.response.data.error) {
@@ -61,135 +91,136 @@ const Edt = ({ schedule, lessons, classrooms }: EdtProps) => {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description: errorMessage,
-        className: "bg-red text-white",
       });
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
-    setShowModal(false);
-    router.refresh();
   };
+
   return (
     <>
-      <button
-        className="btnEdt"
-        type="button"
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={() => setShowModal(true)}
+        className="h-8 w-8 p-0 hover:bg-yellow-50 hover:text-yellow-600 dark:hover:bg-yellow-950 dark:hover:text-yellow-400 transition-colors"
       >
-        Edit
-      </button>
-      {showModal ? (
-        <>
-          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed top-25 right-8 left-8 bottom-25 xsm:left-4 xsm:right-7 lg:left-80 z-50 outline-none focus:outline-none">
-            <div className="relative w-full my-6 mx-auto max-w-3xl">
-              {/*content*/}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white outline-none focus:outline-none dark:border-strokedark dark:bg-boxdark">
-                {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                  <h3 className="text-3xl font-semibold  text-black dark:text-white">
-                    Update Schedule ?
-                  </h3>
-                </div>
-                {/*body*/}
-                <div className="relative p-6 flex-auto">
-                  <form>
-                    <label
-                      htmlFor="lesson"
-                      className="block font-medium text-gray-700 text-black dark:text-white"
-                    >
-                      Lesson:
-                    </label>
-                    <select
-                      name="lesson"
-                      id="lesson"
-                      className="border border-gray-300 rounded-md p-2 w-full text-black"
-                      value={lessonId}
-                      onChange={(e) => setLesson(e.target.value)}
-                    >
-                      <option value="" hidden>
-                        Select Lesson
-                      </option>
-                      {lessons.map((lesson) => (
-                        <option value={lesson.id} key={lesson.id}>
-                          {lesson.name}
-                        </option>
-                      ))}
-                    </select>
-                    <label
-                      htmlFor="day"
-                      className="block font-medium text-gray-700  text-black dark:text-white"
-                    >
-                      Day:
-                    </label>
-                    <input
-                      id="day"
-                      type="date"
-                      placeholder="Day For Schedule"
-                      className="border border-gray-300 rounded-md p-2 w-full  text-black "
-                      value={day}
-                      onChange={(e) => setDay(e.target.value)}
-                    />
-                    <label
-                      htmlFor="time"
-                      className="block font-medium text-gray-700  text-black dark:text-white"
-                    >
-                      Time:
-                    </label>
-                    <input
-                      id="time"
-                      type="time"
-                      placeholder="Day For Schedule"
-                      className="border border-gray-300 rounded-md p-2 w-full  text-black "
-                      value={time}
-                      onChange={(e) => setTime(e.target.value)}
-                    />
-                    <label
-                      htmlFor="classroom"
-                      className="block font-medium text-gray-700 text-black dark:text-white"
-                    >
-                      Classroom:
-                    </label>
-                    <select
-                      name="classroom"
-                      id="classroom"
-                      className="border border-gray-300 rounded-md p-2 w-full text-black"
-                      value={classId}
-                      onChange={(e) => setClass(e.target.value)}
-                    >
-                      <option value="" hidden>
-                        Select Classroom
-                      </option>
-                      {classrooms.map((classroom) => (
-                        <option value={classroom.id} key={classroom.id}>
-                          {classroom.name}
-                        </option>
-                      ))}
-                    </select>
-                  </form>
-                </div>
-                {/*footer*/}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-                  <button
-                    className="btnClose"
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="btnSave"
-                    type="button"
-                    onClick={handleUpdate}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Loading..." : "Save Changes"}
-                  </button>
-                </div>
+        <Edit className="h-4 w-4" />
+        <span className="sr-only">Edit schedule</span>
+      </Button>
+
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent className="sm:max-w-[500px] dark:bg-black bg-white">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-lg">
+              <Calendar className="h-5 w-5 text-yellow-600" />
+              Edit Schedule
+            </DialogTitle>
+            <DialogDescription className="text-gray-600 dark:text-gray-400">
+              Update schedule information for {schedule.lesson?.name || "this lesson"}.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleUpdate} className="space-y-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="lesson" className="text-sm font-medium">
+                  Lesson
+                </Label>
+                <Select value={lessonId} onValueChange={setLesson}>
+                  <SelectTrigger className="h-10">
+                    <SelectValue placeholder="Select lesson" />
+                  </SelectTrigger>
+                  <SelectContent className="dark:bg-black bg-white">
+                    {lessons.map((lesson) => (
+                      <SelectItem key={lesson.id} value={lesson.id}>
+                        {lesson.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="classroom" className="text-sm font-medium">
+                  Classroom
+                </Label>
+                <Select value={classId} onValueChange={setClass}>
+                  <SelectTrigger className="h-10">
+                    <SelectValue placeholder="Select classroom" />
+                  </SelectTrigger>
+                  <SelectContent className="dark:bg-black bg-white">
+                    {classrooms.map((classroom) => (
+                      <SelectItem key={classroom.id} value={classroom.id}>
+                        {classroom.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </div>
             </div>
-          </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
+
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="day" className="text-sm font-medium">
+                  Date
+                </Label>
+                <Input
+                  id="day"
+                  type="date"
+                  value={day}
+                  onChange={(e) => setDay(e.target.value)}
+                  className="h-10"
+                  required
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="time" className="text-sm font-medium">
+                  Time
+                </Label>
+                <Input
+                  id="time"
+                  type="time"
+                  value={time}
+                  onChange={(e) => setTime(e.target.value)}
+                  className="h-10"
+                  required
+                />
+              </div>
+            </div>
+
+            <DialogFooter className="gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowModal(false)}
+                disabled={isLoading}
+                className="flex-1 sm:flex-none"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoading || !lessonId || !classId || !day || !time}
+                className="bg-yellow-600 hover:bg-yellow-700 flex-1 sm:flex-none text-white"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Updating...
+                  </>
+                ) : (
+                  <>
+                    <Edit className="mr-2 h-4 w-4" />
+                    Update Schedule
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

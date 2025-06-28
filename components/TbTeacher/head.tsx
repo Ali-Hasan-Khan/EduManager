@@ -23,7 +23,7 @@ const tablehdDataTeacher: Tablehd[] = [
 
 export const Tbheadteacher = () => {
   return (
-    <thead>
+      <thead>
       <tr className="border-b border-gray-100 dark:border-gray-800">
         {tablehdDataTeacher.map((tablehdItem, key) => {
           const IconComponent = tablehdItem.icon;
@@ -49,7 +49,7 @@ export const Tbheadteacher = () => {
             </th>
           );
         })}
-      </tr>
-    </thead>
+        </tr>
+      </thead>
   );
 };

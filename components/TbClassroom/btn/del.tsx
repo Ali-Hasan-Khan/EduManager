@@ -1,92 +1,109 @@
 "use client";
 import axios from "axios";
-import { useState, SyntheticEvent } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogClose,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Trash2, Loader2, School } from "lucide-react";
 
 type Classroom = {
   id: string;
   name: string;
+  cap: number;
 };
-const Del = ({ classroom }: { classroom: Classroom }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const router = useRouter();
-  const { toast } = useToast();
 
-  const handleDelete = async (id: string) => {
+const Del = ({ classroom }: { classroom: Classroom }) => {
+  const { toast } = useToast();
+  const [isLoading, setIsLoading] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const router = useRouter();
+
+  const handleDelete = async () => {
     setIsLoading(true);
     try {
       await axios.delete(`/api/classroom/${classroom.id}`);
+
       toast({
-        description: "Success Delete Classroom",
+        title: "Classroom deleted successfully",
+        description: `${classroom.name} has been permanently removed from the system.`,
       });
+
+      setShowModal(false);
+      router.refresh();
     } catch (error: any) {
-      let errorMessage = "An error occurred";
-      if (error.response && error.response.data && error.response.data.error) {
+      let errorMessage = "An error occurred while deleting the classroom";
+      if (error.response?.data?.error) {
         errorMessage = error.response.data.error;
       }
+
       toast({
         variant: "destructive",
-        title: "Uh oh! Something went wrong.",
+        title: "Delete Failed",
         description: errorMessage,
-        className: "bg-red text-white",
       });
     } finally {
       setIsLoading(false);
-      setShowModal(false);
-      router.refresh();
     }
   };
+
   return (
     <>
-      <button
-        className="btnDel"
-        type="button"
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={() => setShowModal(true)}
+        className="h-8 w-8 p-0 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-950 dark:hover:text-red-400 transition-colors"
       >
-        Delete
-      </button>
-      {showModal ? (
-        <>
-          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed top-25 right-10 left-10 bottom-25 xsm:left-4 xsm:right-7 lg:left-80 z-50 outline-none focus:outline-none">
-            <div className="relative w-full my-6 mx-auto max-w-3xl">
-              {/*content*/}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white dark:bg-boxdark outline-none focus:outline-none">
-                {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                  <h3 className="text-3xl font-semibold">Delete Classroom</h3>
-                </div>
-                {/*body*/}
-                <div className="relative p-6 flex-auto">
-                  <p className="text-black dark:text-white">
-                    Are you sure you want to delete {classroom.name}?
-                  </p>
-                </div>
-                {/*footer*/}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-                  <button
-                    className="btnClose"
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="btnSave"
-                    type="button"
-                    onClick={() => handleDelete(classroom.id)}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Loading..." : "Save Changes"}
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
+        <Trash2 className="h-4 w-4" />
+        <span className="sr-only">Delete classroom</span>
+      </Button>
+
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent className="sm:max-w-[450px] dark:bg-black bg-white">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-lg">
+              <School className="h-5 w-5 text-red-600" />
+              Delete Classroom
+            </DialogTitle>
+            <DialogDescription className="text-gray-600 dark:text-gray-400 leading-relaxed">
+              Are you sure you want to delete <strong className="text-gray-900 dark:text-white">{classroom.name}</strong>?
+              This action cannot be undone and will permanently remove the classroom and all associated data from the system.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter className="gap-3 pt-4">
+            <DialogClose disabled={isLoading} className="flex-1 sm:flex-none">
+              Cancel
+            </DialogClose>
+            <DialogClose
+              onClick={handleDelete}
+              disabled={isLoading}
+              className="bg-red-600 hover:bg-red-700 focus:ring-red-600 flex-1 sm:flex-none dark:text-white"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Deleting...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="mr-2 h-4 w-4" />
+                  Delete Classroom
+                </>
+              )}
+            </DialogClose>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

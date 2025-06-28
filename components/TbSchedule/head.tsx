@@ -1,63 +1,67 @@
 import React from "react";
 import { Tablehd } from "@/types/table";
-import { Book } from "lucide-react";
-import { MoreHorizontal } from "lucide-react";
+import { BookOpen, School, User, Calendar, Clock, Settings } from "lucide-react";
+
 const tablehdDataSchedule: Tablehd[] = [
   {
     name: "Lesson",
-    icon: Book,
+    icon: BookOpen,
   },
   {
     name: "Classroom",
-    icon: Book,
+    icon: School,
   },
   {
     name: "Teacher",
-    icon: Book,
+    icon: User,
   },
   {
-    name: "Day",
-    icon: Book,
+    name: "Date",
+    icon: Calendar,
   },
   {
     name: "Time",
-    icon: Book,
+    icon: Clock,
   },
   {
     name: "Actions",
-    icon: MoreHorizontal,
+    icon: Settings,
   },
 ];
+
 export const TbheadSchedule = () => {
   return (
-    <>
-      <thead>
-        <tr className="bg-blue-700 text-left dark:bg-meta-4">
-          {tablehdDataSchedule.map((tablehdItem, key) => (
+    <thead>
+      <tr className="border-b border-gray-100 dark:border-gray-800">
+        {tablehdDataSchedule.map((tablehdItem, key) => {
+          const IconComponent = tablehdItem.icon;
+          return (
             <th
               key={key}
-              className={`font-medium text-white dark:text-white ${
+              className={`font-medium text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wider py-4 ${
                 tablehdItem.name === "Lesson"
-                  ? "min-w-[220px] px-4 py-4 xl:pl-11"
+                  ? "min-w-[250px] px-6 xl:pl-8 text-left"
                   : tablehdItem.name === "Classroom"
-                    ? "min-w-[150px] px-4 py-4"
+                    ? "min-w-[180px] px-6 text-left"
                     : tablehdItem.name === "Teacher"
-                      ? "min-w-[150px] px-4 py-4"
-                      : tablehdItem.name === "Day"
-                        ? "min-w-[150px] px-4 py-4"
+                      ? "min-w-[180px] px-6 text-left"
+                      : tablehdItem.name === "Date"
+                        ? "min-w-[140px] px-6 text-left"
                         : tablehdItem.name === "Time"
-                          ? "min-w-[150px] px-4 py-4"
+                          ? "min-w-[120px] px-6 text-left"
                           : tablehdItem.name === "Actions"
-                            ? "px-20 py-4"
-                            : ""
+                            ? "min-w-[120px] px-6 text-center"
+                            : "px-6 text-left"
               }`}
             >
-              <tablehdItem.icon className="h-4 w-4" />
-              {tablehdItem.name}
+              <div className="flex items-center gap-2">
+                <IconComponent className="h-3.5 w-3.5 text-gray-400" />
+                <span className="font-semibold">{tablehdItem.name}</span>
+              </div>  
             </th>
-          ))}
-        </tr>
-      </thead>
-    </>
+          );
+        })}
+      </tr>
+    </thead>
   );
 };

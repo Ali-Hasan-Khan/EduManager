@@ -27,7 +27,7 @@ const tablehdDataUser: Tablehd[] = [
 
 export const Tbheaduser = () => {
   return (
-    <thead>
+      <thead>
       <tr className="border-b border-gray-100 dark:border-gray-800">
         {tablehdDataUser.map((tablehdItem, key) => {
           const IconComponent = tablehdItem.icon;
@@ -39,11 +39,11 @@ export const Tbheaduser = () => {
                   ? "min-w-[300px] px-6 xl:pl-8 text-left"
                   : tablehdItem.name === "Contact"
                     ? "min-w-[240px] px-6 text-left"
-                    : tablehdItem.name === "Role"
+                      : tablehdItem.name === "Role"
                       ? "min-w-[120px] px-6 text-left"
-                      : tablehdItem.name === "Status"
+                        : tablehdItem.name === "Status"
                         ? "min-w-[120px] px-6 text-left"
-                        : tablehdItem.name === "Actions"
+                          : tablehdItem.name === "Actions"
                           ? "min-w-[120px] px-6 text-center"
                           : "px-6 text-left"
               }`}
@@ -55,7 +55,7 @@ export const Tbheaduser = () => {
             </th>
           );
         })}
-      </tr>
-    </thead>
+        </tr>
+      </thead>
   );
 };

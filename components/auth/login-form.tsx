@@ -6,7 +6,6 @@ import { useState, useTransition } from "react";
 import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
 import { signIn } from "next-auth/react";
@@ -27,7 +26,6 @@ import { FormError } from "@/components/form-error";
 import { FormSuccess } from "@/components/form-success";
 
 export const LoginForm = () => {
-  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/home";
   const urlError =
@@ -116,7 +114,7 @@ export const LoginForm = () => {
                         disabled={isPending}
                         placeholder="john.doe@example.com"
                         type="email"
-                        className="bg-gray-900/50 border-gray-800 text-white placeholder:text-gray-500 focus:border-primary focus:ring-primary"
+                        className="bg-gray-900/50 border-gray-800 text-black placeholder:text-gray-500 focus:border-primary focus:ring-primary"
                       />
                     </FormControl>
                     <FormMessage className="text-red-500" />
@@ -136,7 +134,7 @@ export const LoginForm = () => {
                           disabled={isPending}
                           placeholder="••••••••"
                           type={showPassword ? "text" : "password"}
-                          className="bg-gray-900/50 border-gray-800 text-white placeholder:text-gray-500 focus:border-primary focus:ring-primary pr-10"
+                          className="bg-gray-900/50 border-gray-800 text-black placeholder:text-gray-500 focus:border-primary focus:ring-primary pr-10"
                         />
                         <button
                           type="button"

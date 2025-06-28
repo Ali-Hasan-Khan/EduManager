@@ -3,6 +3,19 @@ import axios from "axios";
 import { useState, SyntheticEvent } from "react";
 import { useRouter } from "next/navigation";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Plus, Loader2, Building2 } from "lucide-react";
+
 const Ad = () => {
   const { toast } = useToast();
   const [showModal, setShowModal] = useState(false);
@@ -10,6 +23,7 @@ const Ad = () => {
   const [cap, setCap] = useState("");
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+
   const handleAdd = async (e: SyntheticEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -19,10 +33,13 @@ const Ad = () => {
         cap: cap,
       });
       toast({
-        title: "Classroom Add successfully",
-        description: `classroom : ${response.data.name}
-        Capacity: ${response.data.cap}`,
+        title: "Classroom Added Successfully",
+        description: `Classroom: ${response.data.name} | Capacity: ${response.data.cap}`,
       });
+      setName("");
+      setCap("");
+      setShowModal(false);
+      router.refresh();
     } catch (error: any) {
       let errorMessage = "An error occurred";
       if (error.response && error.response.data && error.response.data.error) {
@@ -32,93 +49,99 @@ const Ad = () => {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description: errorMessage,
-        className: "bg-red text-white",
       });
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
-    setName("");
-    setCap("");
-    setShowModal(false);
-    router.refresh();
   };
+
   return (
     <>
-      <button
-        className="btnAdd"
-        type="button"
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={() => setShowModal(true)}
+        className="h-8 w-8 p-0 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-950 dark:hover:text-green-400 transition-colors"
       >
-        Add
-      </button>
-      {showModal ? (
-        <>
-          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed top-25 right-10 left-10 bottom-25 xsm:left-4 xsm:right-4 lg:left-80 z-50 outline-none focus:outline-none">
-            <div className="relative w-full my-6 mx-auto max-w-3xl">
-              {/*content*/}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white dark:border-strokedark dark:bg-boxdark outline-none focus:outline-none">
-                {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                  <h3 className="text-3xl font-semibold text-black dark:text-white">
-                    Add Classroom
-                  </h3>
-                </div>
-                {/*body*/}
-                <div className="relative p-6 flex-auto">
-                  <form>
-                    <label
-                      htmlFor="name"
-                      className="block font-medium text-gray-700 text-black dark:text-white"
-                    >
-                      Name:
-                    </label>
-                    <input
-                      id="name"
-                      type="text"
-                      placeholder="Name"
-                      className="border border-gray-300 rounded-md p-2 w-full text-black"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                    <label
-                      htmlFor="Capacity"
-                      className="block font-medium text-gray-700 text-black dark:text-white"
-                    >
-                      Capacity:
-                    </label>
-                    <input
-                      id="cap"
-                      type="number"
-                      placeholder="Capacity"
-                      className="border border-gray-300 rounded-md p-2 w-full text-black"
-                      value={cap}
-                      onChange={(e) => setCap(e.target.value)}
-                    />
-                  </form>
-                </div>
-                {/*footer*/}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-                  <button
-                    className="btnClose"
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="btnSave"
-                    type="button"
-                    onClick={handleAdd}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Loading..." : "Save Changes"}
-                  </button>
-                </div>
-              </div>
+        <Plus className="h-4 w-4" />
+        <span className="sr-only">Add classroom</span>
+      </Button>
+
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent className="sm:max-w-[425px] dark:bg-black bg-white">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-lg">
+              <Building2 className="h-5 w-5 text-green-600" />
+              Add Classroom
+            </DialogTitle>
+            <DialogDescription className="text-gray-600 dark:text-gray-400">
+              Create a new classroom with name and capacity.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleAdd} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium">
+                Classroom Name
+              </Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Enter classroom name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="h-10"
+                required
+              />
             </div>
-          </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
+
+            <div className="space-y-2">
+              <Label htmlFor="cap" className="text-sm font-medium">
+                Capacity
+              </Label>
+              <Input
+                id="cap"
+                type="number"
+                placeholder="Enter capacity"
+                value={cap}
+                onChange={(e) => setCap(e.target.value)}
+                className="h-10"
+                required
+                min="1"
+              />
+            </div>
+
+            <DialogFooter className="gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowModal(false)}
+                disabled={isLoading}
+                className="flex-1 sm:flex-none"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoading || !name || !cap}
+                className="bg-green-600 hover:bg-green-700 flex-1 sm:flex-none text-white"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create Classroom
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

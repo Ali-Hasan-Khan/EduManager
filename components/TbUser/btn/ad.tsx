@@ -132,7 +132,7 @@ const Ad = () => {
         size="sm"
       >
         <Plus className="h-4 w-4 mr-2" />
-        Add User
+                    Add User
       </Button>
 
       <Dialog open={showModal} onOpenChange={setShowModal}>
@@ -161,11 +161,11 @@ const Ad = () => {
                     Full Name *
                   </Label>
                   <Input
-                    id="name"
-                    type="text"
+                      id="name"
+                      type="text"
                     placeholder="Enter full name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
+                      value={name}
+                      onChange={(e) => setName(e.target.value)}
                     className="h-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
@@ -176,11 +176,11 @@ const Ad = () => {
                     Email Address *
                   </Label>
                   <Input
-                    id="email"
-                    type="email"
+                      id="email"
+                      type="email"
                     placeholder="Enter email address"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                     className="h-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
@@ -193,11 +193,11 @@ const Ad = () => {
                 </Label>
                 <div className="relative">
                   <Input
-                    id="password"
+                      id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter password (min 6 characters)"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                     className="h-10 pr-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
@@ -269,9 +269,9 @@ const Ad = () => {
                       <SelectItem value={UserGender.UNKNOW}>Unknown</SelectItem>
                     </SelectContent>
                   </Select>
-                </div>
               </div>
             </div>
+          </div>
 
             <DialogFooter className="gap-3 pt-4">
               <Button

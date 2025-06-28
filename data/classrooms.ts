@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 
-export const fetchClassrooms = async ({ take = 5, skip = 0 }) => {
+export const fetchClassrooms = async ({ take = 5, skip = 0 , query}: { take?: number; skip?: number; query?: string }) => {
   "use server";
   try {
     const results = await db.classrooms.findMany({
@@ -15,9 +15,22 @@ export const fetchClassrooms = async ({ take = 5, skip = 0 }) => {
       orderBy: {
         name: "asc",
       },
+      where: {
+        name: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
     });
 
-    const total = await db.classrooms.count();
+    const total = await db.classrooms.count({
+      where: {
+        name: {
+          contains: query,
+          mode: "insensitive",
+        },
+      },
+    });
 
     return {
       data: results,

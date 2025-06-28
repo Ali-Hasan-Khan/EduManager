@@ -87,7 +87,7 @@ const Del = ({ user }: { user: User }) => {
             <Button
               onClick={handleDelete}
               disabled={isLoading}
-              className="bg-red-600 hover:bg-red-700 focus:ring-red-600 flex-1 sm:flex-none text-white"
+              className="bg-red-600 hover:bg-red-700 focus:ring-red-600 flex-1 sm:flex-none dark:text-white"
             >
               {isLoading ? (
                 <>

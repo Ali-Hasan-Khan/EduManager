@@ -41,8 +41,8 @@ export function HeroSection() {
       }
 
       if (signInResult?.ok) {
-        toast.success("Demo login successful!");
-        window.location.href = "/home";
+      toast.success("Demo login successful!");
+      window.location.href = "/home";
       }
     } catch (error) {
       toast.error("Something went wrong!");
@@ -106,7 +106,7 @@ export function HeroSection() {
                 ) : (
                   <>
                     Take a demo
-                    <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="w-4 h-4" />
                   </>
                 )}
               </Button>

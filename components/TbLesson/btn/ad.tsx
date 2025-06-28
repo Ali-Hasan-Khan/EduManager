@@ -4,6 +4,26 @@ import { useState, SyntheticEvent } from "react";
 import { useRouter } from "next/navigation";
 import { LessonCategory, Teachers } from "@prisma/client";
 import { useToast } from "@/components/ui/use-toast";
+import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Plus, Loader2, BookOpen } from "lucide-react";
+
 const Ad = ({ teachers }: { teachers: Teachers[] }) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -12,6 +32,7 @@ const Ad = ({ teachers }: { teachers: Teachers[] }) => {
   const [cat, setCat] = useState("");
   const [teacher, setTeacher] = useState("");
   const router = useRouter();
+
   const handleAdd = async (e: SyntheticEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -22,9 +43,14 @@ const Ad = ({ teachers }: { teachers: Teachers[] }) => {
         teacher: teacher,
       });
       toast({
-        title: "Lesson Add successfully",
-        description: `Lesson : ${response.data.name}`,
+        title: "Lesson Added Successfully",
+        description: `Lesson: ${response.data.name}`,
       });
+      setName("");
+      setCat("");
+      setTeacher("");
+      setShowModal(false);
+      router.refresh();
     } catch (error: any) {
       let errorMessage = "An error occurred";
       if (error.response && error.response.data && error.response.data.error) {
@@ -34,128 +60,118 @@ const Ad = ({ teachers }: { teachers: Teachers[] }) => {
         variant: "destructive",
         title: "Uh oh! Something went wrong.",
         description: errorMessage,
-        className: "bg-red text-white",
       });
+    } finally {
+      setIsLoading(false);
     }
-    setIsLoading(false);
-    setName("");
-    setCat("");
-    setTeacher("");
-    router.refresh();
-    setShowModal(false);
   };
+
   return (
     <>
-      <button
-        className="btnAdd"
-        type="button"
+      <Button
+        variant="ghost"
+        size="sm"
         onClick={() => setShowModal(true)}
+        className="h-8 w-8 p-0 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-950 dark:hover:text-green-400 transition-colors"
       >
-        Add
-      </button>
-      {showModal ? (
-        <>
-          <div className="justify-center items-center flex overflow-x-hidden overflow-y-auto fixed top-25 right-10 left-10 bottom-25 xsm:left-4 xsm:right-4 lg:left-80 z-50 outline-none focus:outline-none">
-            <div className="relative w-full my-6 mx-auto max-w-3xl">
-              {/*content*/}
-              <div className="border-0 rounded-lg shadow-lg relative flex flex-col w-full bg-white dark:border-strokedark dark:bg-boxdark outline-none focus:outline-none">
-                {/*header*/}
-                <div className="flex items-start justify-between p-5 border-b border-solid border-blueGray-200 rounded-t">
-                  <h3 className="text-3xl font-semibold text-black dark:text-white">
-                    Add Lesson
-                  </h3>
-                </div>
-                {/*body*/}
-                <div className="relative p-6 flex-auto">
-                  <form>
-                    <label
-                      htmlFor="name"
-                      className="block font-medium text-gray-700 text-black dark:text-white"
-                    >
-                      Lesson Name:
-                    </label>
-                    <input
-                      id="name"
-                      type="text"
-                      placeholder="Lesson Name"
-                      className="border border-gray-300 rounded-md p-2 w-full text-black"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
-                    />
-                    <label
-                      htmlFor="cat"
-                      className="block font-medium text-gray-700 text-black dark:text-white"
-                    >
-                      Lesson Category:
-                    </label>
-                    <select
-                      name="cat"
-                      id="cat"
-                      className="border border-gray-300 rounded-md p-2 w-full text-black"
-                      value={cat}
-                      onChange={(e) => setCat(e.target.value as LessonCategory)}
-                    >
-                      <option value="" disabled>
-                        Select Category of Lesson
-                      </option>
-                      <option value={LessonCategory.ART}>Art</option>
-                      <option value={LessonCategory.LANGUANGES}>
-                        Languanges
-                      </option>
-                      <option value={LessonCategory.SCIENCE}>Science</option>
-                      <option value={LessonCategory.SPORT}>Sport</option>
-                    </select>
-                    <label
-                      htmlFor="Teacher"
-                      className="block font-medium text-gray-700 text-black dark:text-white"
-                    >
-                      Teacher:
-                    </label>
-                    <select
-                      name="teacher"
-                      id="teacher"
-                      className="border border-gray-300 rounded-md p-2 w-full text-black"
-                      value={teacher}
-                      onChange={(e) => {
-                        console.log("Selected teacher ID:", e.target.value);
-                        setTeacher(e.target.value);
-                      }}
-                    >
-                      <option value="" disabled>
-                        Select Teacher
-                      </option>
-                      {teachers.map((teacher) => (
-                        <option value={teacher.userId} key={teacher.userId}>
-                          {teacher.name}
-                        </option>
-                      ))}
-                    </select>
-                  </form>
-                </div>
-                {/*footer*/}
-                <div className="flex items-center justify-end p-6 border-t border-solid border-blueGray-200 rounded-b">
-                  <button
-                    className="btnClose"
-                    type="button"
-                    onClick={() => setShowModal(false)}
-                  >
-                    Close
-                  </button>
-                  <button
-                    className="btnSave"
-                    type="button"
-                    onClick={handleAdd}
-                    disabled={isLoading}
-                  >
-                    {isLoading ? "Loading..." : "Save Changes"}
-                  </button>
-                </div>
-              </div>
+        <Plus className="h-4 w-4" />
+        <span className="sr-only">Add lesson</span>
+      </Button>
+
+      <Dialog open={showModal} onOpenChange={setShowModal}>
+        <DialogContent className="sm:max-w-[425px] dark:bg-black bg-white">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-lg">
+              <BookOpen className="h-5 w-5 text-green-600" />
+              Add Lesson
+            </DialogTitle>
+            <DialogDescription className="text-gray-600 dark:text-gray-400">
+              Create a new lesson with name, category, and assigned teacher.
+            </DialogDescription>
+          </DialogHeader>
+
+          <form onSubmit={handleAdd} className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="name" className="text-sm font-medium">
+                Lesson Name
+              </Label>
+              <Input
+                id="name"
+                type="text"
+                placeholder="Enter lesson name"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="h-10"
+                required
+              />
             </div>
-          </div>
-          <div className="opacity-25 fixed inset-0 z-40 bg-black"></div>
-        </>
-      ) : null}
+
+            <div className="space-y-2">
+              <Label htmlFor="cat" className="text-sm font-medium">
+                Category
+              </Label>
+              <Select value={cat} onValueChange={setCat}>
+                <SelectTrigger className="h-10">
+                  <SelectValue placeholder="Select category" />
+                </SelectTrigger>
+                <SelectContent className="dark:bg-black bg-white">
+                  <SelectItem value={LessonCategory.ART}>Art</SelectItem>
+                  <SelectItem value={LessonCategory.LANGUANGES}>Languages</SelectItem>
+                  <SelectItem value={LessonCategory.SCIENCE}>Science</SelectItem>
+                  <SelectItem value={LessonCategory.SPORT}>Sport</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="teacher" className="text-sm font-medium">
+                Teacher
+              </Label>
+              <Select value={teacher} onValueChange={setTeacher}>
+                <SelectTrigger className="h-10">
+                  <SelectValue placeholder="Select teacher" />
+                </SelectTrigger>
+                <SelectContent className="dark:bg-black bg-white">
+                  {teachers.map((teacher) => (
+                    <SelectItem key={teacher.userId} value={teacher.userId}>
+                      {teacher.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <DialogFooter className="gap-3 pt-4">
+              <Button
+                type="button"
+                variant="outline"
+                onClick={() => setShowModal(false)}
+                disabled={isLoading}
+                className="flex-1 sm:flex-none"
+              >
+                Cancel
+              </Button>
+              <Button
+                type="submit"
+                disabled={isLoading || !name || !cat || !teacher}
+                className="bg-green-600 hover:bg-green-700 flex-1 sm:flex-none text-white"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    Creating...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Create Lesson
+                  </>
+                )}
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

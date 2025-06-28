@@ -1,32 +1,27 @@
 import React from "react";
 import { Tablehd } from "@/types/table";
-import { Book } from "lucide-react";
-import { User } from "lucide-react";
-import { File } from "lucide-react";
-import { Calendar } from "lucide-react";
-import { Clock } from "lucide-react";
-import { MoreHorizontal } from "lucide-react";
+import { BookOpen, User, FileText, School, Calendar, Clock, Settings } from "lucide-react";
 
-const tablehdDataSchedule: Tablehd[] = [
+const tablehdDataAssignment: Tablehd[] = [
   {
     name: "Lesson",
-    icon: Book,
+    icon: BookOpen,
   },
   {
-    name: "Name",
-    icon: User,
+    name: "Assignment",
+    icon: FileText,
   },
   {
-    name: "CreateBy",
+    name: "Created By",
     icon: User,
   },
   {
     name: "Classroom",
-    icon: Book,
+    icon: School,
   },
   {
     name: "File",
-    icon: File,
+    icon: FileText,
   },
   {
     name: "Deadline",
@@ -34,49 +29,51 @@ const tablehdDataSchedule: Tablehd[] = [
   },
   {
     name: "Time",
-    icon: Clock
+    icon: Clock,
   },
   {
     name: "Actions",
-    icon: MoreHorizontal
+    icon: Settings,
   },
 ];
+
 export const TbheadAssignment = () => {
   return (
-    <>
-      <thead>
-        <tr className="bg-blue-700 text-left dark:bg-meta-4">
-          {tablehdDataSchedule.map((tablehdItem, key) => (
+    <thead>
+      <tr className="border-b border-gray-100 dark:border-gray-800">
+        {tablehdDataAssignment.map((tablehdItem, key) => {
+          const IconComponent = tablehdItem.icon;
+          return (
             <th
               key={key}
-              className={`font-medium text-white dark:text-white ${
+              className={`font-medium text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wider py-4 ${
                 tablehdItem.name === "Lesson"
-                  ? "min-w-[220px] px-4 py-4 xl:pl-11"
-                  : tablehdItem.name === "Name"
-                    ? "min-w-[150px] px-4 py-4"
-                    : tablehdItem.name === "CreateBy"
-                      ? "min-w-[150px] px-4 py-4"
+                  ? "min-w-[200px] px-6 xl:pl-8 text-left"
+                  : tablehdItem.name === "Assignment"
+                    ? "min-w-[180px] px-6 text-left"
+                    : tablehdItem.name === "Created By"
+                      ? "min-w-[150px] px-6 text-left"
                       : tablehdItem.name === "Classroom"
-                        ? "min-w-[150px] px-4 py-4"
+                        ? "min-w-[150px] px-6 text-left"
                         : tablehdItem.name === "File"
-                          ? "min-w-[150px] px-4 py-4"
+                          ? "min-w-[120px] px-6 text-center"
                           : tablehdItem.name === "Deadline"
-                            ? "min-w-[150px] px-4 py-4"
+                            ? "min-w-[140px] px-6 text-left"
                             : tablehdItem.name === "Time"
-                              ? "min-w-[150px] px-4 py-4"
-                              : tablehdItem.name === "File"
-                                ? "min-w-[150px] px-4 py-4"
-                                : tablehdItem.name === "Actions"
-                                  ? "px-20 py-4"
-                                  : ""
+                              ? "min-w-[120px] px-6 text-left"
+                              : tablehdItem.name === "Actions"
+                                ? "min-w-[120px] px-6 text-center"
+                                : "px-6 text-left"
               }`}
             >
-              <tablehdItem.icon className="h-4 w-4" />
-              {tablehdItem.name}
+              <div className="flex items-center gap-2">
+                <IconComponent className="h-3.5 w-3.5 text-gray-400" />
+                <span className="font-semibold">{tablehdItem.name}</span>
+              </div>  
             </th>
-          ))}
-        </tr>
-      </thead>
-    </>
+          );
+        })}
+      </tr>
+    </thead>
   );
 };

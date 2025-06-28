@@ -1,12 +1,19 @@
 import { db } from "@/lib/db";
 
-export const fetchSchedules = async ({ take = 5, skip = 0 }) => {
+export const fetchSchedules = async ({ take = 5, skip = 0, query }: { take: number, skip: number, query: string }) => {
   "use server";
   try {
     const results = await db.schedule.findMany({
       relationLoadStrategy: "join",
       skip,
       take,
+      where: {
+        OR: [
+          { lesson: { name: { contains: query, mode: "insensitive" } } },
+          { classroom: { name: { contains: query, mode: "insensitive" } } },
+          { lesson: { teacher: { name: { contains: query, mode: "insensitive" } } } },
+        ],
+      },
       select: {
         id: true,
         day: true,
@@ -34,7 +41,15 @@ export const fetchSchedules = async ({ take = 5, skip = 0 }) => {
       },
     });
 
-    const total = await db.schedule.count();
+    const total = await db.schedule.count({
+      where: {
+        OR: [
+          { lesson: { name: { contains: query, mode: "insensitive" } } },
+          { classroom: { name: { contains: query, mode: "insensitive" } } },
+          { lesson: { teacher: { name: { contains: query, mode: "insensitive" } } } },
+        ],
+      },
+    });
 
     return {
       data: results,

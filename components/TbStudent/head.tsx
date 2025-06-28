@@ -27,7 +27,7 @@ const tablehdDataStudent: Tablehd[] = [
 
 export const Tbheadstudent = () => {
   return (
-    <thead>
+      <thead>
       <tr className="border-b border-gray-100 dark:border-gray-800">
         {tablehdDataStudent.map((tablehdItem, key) => {
           const IconComponent = tablehdItem.icon;
@@ -55,7 +55,7 @@ export const Tbheadstudent = () => {
             </th>
           );
         })}
-      </tr>
-    </thead>
+        </tr>
+      </thead>
   );
 };
