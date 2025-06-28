@@ -117,7 +117,7 @@ const Edt = ({ classroom }: { classroom: Classroom }) => {
               Edit Classroom
             </DialogTitle>
             <DialogDescription className="text-gray-600 dark:text-gray-400">
-              Update {classroom.name}'s information. All fields are required.
+              Update {classroom.name}&apos;s information. All fields are required.
             </DialogDescription>
           </DialogHeader>
 

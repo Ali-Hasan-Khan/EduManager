@@ -10,7 +10,7 @@ const TbodyAssignment = async (props: PageProps) => {
   const pageNumber = Number(props?.searchParams?.page || 1); // Get the page number. Default to 1 if not provided.
   const take = 5;
   const skip = (pageNumber - 1) * take;
-  const { data, metadata } = await fetchAssignment({ take, skip });
+  const { data, metadata } = await fetchAssignment({ take, skip, query: "" });
   const [lessons] = await Promise.all([getAllLessons()]);
   const [classrooms] = await Promise.all([getAllClassrooms()]);
   return (
