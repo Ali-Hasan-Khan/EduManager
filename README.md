@@ -9,6 +9,7 @@ EduManager is a platform designed to assist school administration, teachers, and
 - **Class Management**: Create, view, edit, and delete class information. Manage schedules and course data.
 - **Schedule Management**: Create and manage class schedules, teacher schedules, and student schedules. Generate schedule reports.
 - **Assignment Management**: Create, edit and delete assignments.
+
 ## Teacher Features
 - **Teaching Schedule**: View teaching schedule.
 - **Assignment Management**: Create, edit and delete assignments.
