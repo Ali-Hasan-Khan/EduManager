@@ -24,6 +24,7 @@ model User {
   student               Students?
   teacher               Teachers?
   twoFactorConfirmation TwoFactorConfirmation?
+  markedAttendance      Attendance[]           // Added attendance relation
 }
 
 model Account {
@@ -91,6 +92,7 @@ model Students {
   userId      String        @unique
   name        String?
   onClassroom OnClassroom[]
+  attendance  Attendance[]  // Added attendance relation
   user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
@@ -101,6 +103,7 @@ model Classrooms {
   assingment         Assignments[] @relation("classroomstoassingment")
   studentOnclassroom OnClassroom[]
   schedule           Schedule[]    @relation("classtoschedule")
+  attendance         Attendance[]  // Added attendance relation
 }
 
 model OnClassroom {
@@ -121,6 +124,7 @@ model Lessons {
   assingment Assignments[]  @relation("lessontoassingment")
   teacher    Teachers       @relation("lessontoteacher", fields: [teacherId], references: [userId], onDelete: Cascade)
   schedule   Schedule[]     @relation("lessontoschedule")
+  attendance Attendance[]   // Added attendance relation
 
   @@index([teacherId])
 }
@@ -133,6 +137,7 @@ model Schedule {
   time      String
   classroom Classrooms @relation("classtoschedule", fields: [classId], references: [id], onDelete: Cascade)
   lesson    Lessons    @relation("lessontoschedule", fields: [lessonId], references: [id], onDelete: Cascade)
+  attendance Attendance[] // Added attendance relation
 
   @@index([lessonId, classId])
 }
@@ -151,6 +156,42 @@ model Assignments {
   lesson    Lessons    @relation("lessontoassingment", fields: [lessonId], references: [id], onDelete: Cascade)
 
   @@index([lessonId, classId, createBy])
+}
+
+model Attendance {
+  id          String   @id @default(cuid())
+  studentId   String
+  scheduleId  String
+  classId     String
+  lessonId    String
+  date        DateTime
+  status      AttendanceStatus @default(PRESENT)
+  markedBy    String
+  markedAt    DateTime @default(now())
+  
+  // Relations
+  student     Students   @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  schedule    Schedule   @relation(fields: [scheduleId], references: [id], onDelete: Cascade)
+  classroom   Classrooms @relation(fields: [classId], references: [id], onDelete: Cascade)
+  lesson      Lessons    @relation(fields: [lessonId], references: [id], onDelete: Cascade)
+  markedByUser User      @relation(fields: [markedBy], references: [id], onDelete: Cascade)
+  
+  // Indexes for better performance
+  @@index([studentId])
+  @@index([scheduleId])
+  @@index([classId])
+  @@index([lessonId])
+  @@index([date])
+  
+  // Unique constraint to prevent duplicate attendance
+  @@unique([studentId, scheduleId, date])
+  
+  @@map("attendance")
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
 }
 
 enum UserRole {

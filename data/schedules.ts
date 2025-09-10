@@ -105,4 +105,24 @@ export const getScheduleByClassId = async (classId: string) => {
   }
 };
 
+export const getScheduleById = async (scheduleId: string) => {
+  try {
+    const schedule = await db.schedule.findUnique({
+      where: {
+        id: scheduleId,
+      },
+      include: {
+        lesson: true,
+        classroom: true,
+      },
+    });
+    return schedule;
+  } catch(error) {
+    console.error("Error fetching schedule by ID:", error);
+    return null;
+  } finally {
+    await db.$disconnect();
+  }
+};
+
 

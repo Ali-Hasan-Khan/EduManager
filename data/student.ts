@@ -104,5 +104,34 @@ export const getTeacherNameById = async (teacherId: string) => {
   }
 };
 
+export const getStudentsByClassId = async (classId: string) => {
+  try{
+    const students = await db.onClassroom.findMany({
+      where: {
+        classroomId: classId,
+      },
+      include: {
+        student: {
+          include: {
+            user: {
+              select: {
+                id: true,
+                name: true,
+                email: true,
+              }
+            }
+          }
+        }
+      }
+    });
+
+    return students;
+  } catch (error) {
+    console.error("Error fetching students by class ID:", error);
+    return [];
+  } finally {
+    await db.$disconnect();
+  }
+};
 
 

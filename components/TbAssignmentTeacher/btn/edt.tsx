@@ -25,8 +25,16 @@ const Edt = ({ assignment, lessons, classrooms }: EdtProps) => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [showModal, setShowModal] = useState(false);
+  console.log("deadline ",assignment.deadline)
+
+  const parseDeadline = (dateStr: string) => {
+    const [day,month,year] = dateStr.split('/');
+    if(!day || !month || !year) return "";
+    const date = new Date(Number(year), Number(month) - 1, Number(day));
+    return date.toISOString().split("T")[0];
+  }
   const [deadline, setDeadline] = useState(
-    new Date(assignment.deadline).toISOString().split("T")[0] || ""
+    parseDeadline(assignment.deadline) || ""
   );
   const [time, setTime] = useState(assignment.time || "");
   const [lessonId, setLesson] = useState(assignment.lessonId || "");

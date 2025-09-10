@@ -17,7 +17,7 @@ export const authConfig = {
   events: {
     async linkAccount({ user }) {
       try {
-        await db.user.update({
+        await db.user.updateMany({
           where: { id: user.id },
           data: { emailVerified: new Date() },
         });
@@ -135,7 +135,7 @@ export const authConfig = {
       }
     },
   },
-  session: { strategy: "jwt", maxAge: 20*60 },
+  session: { strategy: "jwt", maxAge: 30*60 }, // half an hour
   debug: process.env.NODE_ENV === "development",
   trustHost: true,
 } satisfies NextAuthConfig;

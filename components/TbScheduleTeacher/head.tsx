@@ -18,6 +18,10 @@ const tablehdDataLesson: Tablehd[] = [
     name: "Time",
     icon: Book,
   },
+  {
+    name: "Attendance",
+    icon: Book,
+  },
 ];
 export const TbheadLesson = () => {
   return (
@@ -29,18 +33,22 @@ export const TbheadLesson = () => {
               key={key}
               className={`font-medium text-white dark:text-white ${
                 tablehdItem.name === "Lesson"
-                  ? "min-w-[220px] px-4 py-4 xl:pl-11"
+                  ? "min-w-[12px] px-4 py-4 xl:pl-11"
                   : tablehdItem.name === "Classroom"
                     ? "min-w-[150px] px-4 py-4"
                     : tablehdItem.name === "Date"
                       ? "min-w-[150px] px-4 py-4"
                       : tablehdItem.name === "Time"
                         ? "min-w-[150px] px-4 py-4"
-                        : ""
+                        : tablehdItem.name === "Attendance"
+                          ? "min-w-[150px] px-4 py-4"
+                          : ""
               }`}
             >
-              <tablehdItem.icon className="h-4 w-4" />
-              {tablehdItem.name}
+              <div className="flex items-center">
+                <tablehdItem.icon className="mr-2 h-4 w-4" />
+                {tablehdItem.name}
+              </div>
             </th>
           ))}
         </tr>
