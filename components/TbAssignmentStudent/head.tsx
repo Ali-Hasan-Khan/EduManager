@@ -15,7 +15,7 @@ const tablehdDataSchedule: Tablehd[] = [
     name: "Name",
     icon: User,
   },
-  { 
+  {
     name: "CreateBy",
     icon: User,
   },
@@ -58,16 +58,16 @@ export const TbheadAssignment = () => {
                           : tablehdItem.name === "Deadline"
                             ? "min-w-[150px] px-4 py-4"
                             : tablehdItem.name === "Time"
-                              ? "min-w-[150px] px-4 py-4"
-                              : tablehdItem.name === "File"
-                                ? "min-w-[150px] px-4 py-4"
-                                : tablehdItem.name === "Actions"
-                                  ? "px-20 py-4"
-                                  : ""
+                              ? "min-w-[15px] px-4 py-4"
+                              : tablehdItem.name === "Actions"
+                                ? "px-20 py-4"
+                                : ""
               }`}
             >
-              <tablehdItem.icon className="h-4 w-4" />
-              {tablehdItem.name}
+              <div className="flex items-center gap-2">
+                <tablehdItem.icon className="h-4 w-4" />
+                {tablehdItem.name}
+              </div>
             </th>
           ))}
         </tr>

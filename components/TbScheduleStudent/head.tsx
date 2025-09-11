@@ -43,8 +43,10 @@ export const TbheadScheduleStudent = () => {
                         : ""
               }`}
             >
-              <tablehdItem.icon className="h-4 w-4" />
-              {tablehdItem.name}
+              <div className="flex items-center gap-2">
+                <tablehdItem.icon className="h-4 w-4" />
+                {tablehdItem.name}
+              </div>
             </th>
           ))}
         </tr>

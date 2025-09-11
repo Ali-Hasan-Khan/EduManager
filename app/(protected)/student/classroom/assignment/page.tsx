@@ -5,7 +5,7 @@ import {
   getClassroomIdByStudentUserId,
   getTeacherIdByClassroomId,
   getAssignmentsByClassroomId,
-  getTeacherNameById
+  getTeacherNameById,
 } from "@/data/student";
 const UserList = async () => {
   const classroomId = await getClassroomIdByStudentUserId();
@@ -50,14 +50,14 @@ const UserList = async () => {
             classroom: {
               name: result.classroom?.name ?? "",
             },
-            deadline: new Date(result.deadline).toLocaleDateString(),
+            deadline: result.deadline, // ← Keep original Date object
+            deadlineFormatted: new Date(result.deadline).toLocaleDateString(), // ← For display only
             time: result.time,
             task: result.task,
             fileUrl: result.fileUrl,
             id: result.id,
             lessonId: result.lessonId,
             classId: result.classId,
-            // Replace createBy with teacherName from the map
             createBy: teacherNamesMap[result.createBy],
           },
         ],
@@ -65,13 +65,10 @@ const UserList = async () => {
     ],
   }));
 
-
-
-  // const [classrooms] = await Promise.all([getAllClassrooms()]);
-  // const { data } = await getLessonbyTeacherId();
-  // const AssignmentData = AssignmentResult(result);
-
-  const OpenOnNewTabLink: React.FC<{ url: string; children: React.ReactNode }> = ({ url, children }) => (
+  const OpenOnNewTabLink: React.FC<{
+    url: string;
+    children: React.ReactNode;
+  }> = ({ url, children }) => (
     <a href={url} target="_blank">
       {children}
     </a>
@@ -121,16 +118,19 @@ const UserList = async () => {
                         {lesson.assingment.map((assignment) => (
                           <li
                             key={assignment.id}
-                            className="text-sm text-black dark:text-white py-1"
+                            className="text-sm text-black dark:text-white py-1.5"
                           >
                             <button className="btnDownload" type="button">
                               {/* <Link href={assignment.fileUrl}>Click Here</Link> */}
-                              <OpenOnNewTabLink url={assignment.fileUrl} >Click Here</OpenOnNewTabLink>
+                              <OpenOnNewTabLink url={assignment.fileUrl}>
+                                Click Here
+                              </OpenOnNewTabLink>
                             </button>
                           </li>
                         ))}
                       </ul>
                     </td>
+                    {/* Display formatted date */}
                     <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                       <ul className="text-sm text-black dark:text-white py-5">
                         {lesson.assingment.map((assignment) => (
@@ -138,7 +138,8 @@ const UserList = async () => {
                             key={assignment.id}
                             className="text-sm text-black dark:text-white py-1.5"
                           >
-                            {assignment.deadline}
+                            {assignment.deadlineFormatted}{" "}
+                            {/* ← Use formatted version for display */}
                           </li>
                         ))}
                       </ul>
@@ -157,16 +158,29 @@ const UserList = async () => {
                     </td>
                     <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
                       <ul className="text-sm text-black dark:text-white py-5">
-                        {lesson.assingment.map((assignment) => (
-                          <li
-                            key={assignment.id}
-                            className="text-sm text-center text-black dark:text-white py-1"
-                          >
-                            <button className="btnDownload" type="button">
-                              <Link href="/student/assignment/submit">Submit</Link>
-                            </button>
-                          </li>
-                        ))}
+                        {lesson.assingment.map((assignment) => {
+                          const isLate =
+                            new Date() > new Date(assignment.deadline); 
+
+                          return (
+                            <li
+                              key={assignment.id}
+                              className="text-sm text-center text-black dark:text-white py-1"
+                            >
+                              {isLate ? (
+                                <div className="bg-red-100 text-red-700 px-2 py-1 rounded">
+                                  <span>Late</span>
+                                </div>
+                              ) : (
+                                <button className="btnDownload" type="button">
+                                  <Link href="/student/assignment/submit">
+                                    Submit
+                                  </Link>
+                                </button>
+                              )}
+                            </li>
+                          );
+                        })}
                       </ul>
                     </td>
                   </tr>
@@ -176,7 +190,7 @@ const UserList = async () => {
           </table>
         </div>
       </div>
-    </div >
+    </div>
   );
 };
 

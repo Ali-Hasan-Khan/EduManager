@@ -17,6 +17,8 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Plus, Loader2, GraduationCap } from "lucide-react";
+import axios from "axios";
+import { toast } from "@/components/ui/use-toast";
 
 interface AddProps {
   classrooms: any[];
@@ -33,12 +35,23 @@ const Add = ({ classrooms, student }: AddProps) => {
     
     setIsLoading(true);
     try {
-      // Your add logic here
       console.log("Adding student to classroom:", selectedClassroom);
-      
+      const response = await axios.post('/api/student', {
+        studentId: student.userId,
+        classroomId: selectedClassroom
+      });
+      toast({
+        title: "Student Added Successfully",
+        description: "New student has been added to the classroom.",
+      });
       setShowModal(false);
       setSelectedClassroom("");
     } catch (error) {
+      toast({
+        title: "Error",
+        description: "There was an error adding the student to the classroom. Student may already be in other classroom.",
+        variant: "destructive",
+      });
       console.error("Error adding student to classroom:", error);
     } finally {
       setIsLoading(false);
