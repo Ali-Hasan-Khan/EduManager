@@ -39,8 +39,15 @@ export const fetchClassrooms = async ({ take = 5, skip = 0 , query}: { take?: nu
         totalPages: Math.ceil(total / take),
       },
     };
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching classrooms: ", error);
+    return {
+      data: [],
+      metadata: {
+        hasNextPage: false,
+        totalPages: 0,
+      },
+    };
   }
 };
 
@@ -49,13 +56,18 @@ export const getTotalUsersInClassroom = async ({
 }: {
   classroomId?: string;
 }) => {
-  const totalStudent = await db.onClassroom.count({
+  try{
+    const totalStudent = await db.onClassroom.count({
     where: {
       classroomId: classroomId,
     },
   });
 
   return totalStudent;
+  } catch (error) {
+    console.error("Error fetching total users in classroom:", error);
+    throw new Error("Could not fetch total users in classroom");
+  }
 };
 
 
@@ -88,7 +100,5 @@ export const getClassroomById = async (classroomId: string) => {
   } catch (error) {
     console.error("Error fetching classroom data:", error);
     throw new Error("Could not fetch classroom data");
-  } finally {
-    await db.$disconnect();
-  }
+  } 
 };

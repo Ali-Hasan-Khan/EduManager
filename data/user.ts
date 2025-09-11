@@ -37,7 +37,8 @@ export const getAllUsers = async () => {
       },
     });
     return res;
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching users: ", error);
+    return [];
   }
 };

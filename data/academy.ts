@@ -10,8 +10,9 @@ export const getAllClassrooms = async () => {
       },
     });
     return res;
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching classroom data:", error);
+    throw new Error("Could not fetch classroom data");
   }
 };
 
@@ -32,8 +33,9 @@ export const getAllTeachers = async () => {
       },
     });
     return res;
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching teachers: ", error);
+    return [];
   }
 };
 
@@ -63,8 +65,9 @@ export const getAllStudents = async () => {
       },
     });
     return res;
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching students:", error);
+    return [];
   }
 };
 
@@ -85,10 +88,12 @@ export const getAllLessons = async () => {
       },
     });
     return res;
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching lessons:", error);
+    return [];
   }
 };
+
 export const getAllSchedules = async () => {
   try {
     const res = await db.schedule.findMany({
@@ -117,10 +122,12 @@ export const getAllSchedules = async () => {
       },
     });
     return res;
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching schedules:", error);
+    return [];
   }
 };
+
 export const getAllAssignmets = async () => {
   try {
     const res = await db.assignments.findMany({
@@ -146,11 +153,11 @@ export const getAllAssignmets = async () => {
       },
     });
     return res;
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching assignments:", error);
+    return [];
   }
 };
-
 
 export const getClassroomsByStudentId = async (studentId: string) => {
   try {
@@ -171,8 +178,9 @@ export const getClassroomsByStudentId = async (studentId: string) => {
 
     // Flatten the response to return an array of classrooms
     return classrooms.map((entry) => entry.classroom);
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching classrooms by student ID:", error);
+    return [];
   }
 };
 

@@ -45,7 +45,14 @@ export const fetchLessons = async ({ take = 5, skip = 0, query }: { take?: numbe
         totalPages: Math.ceil(total / take),
       },
     };
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching lessons: ", error);
+    return {
+      data: [],
+      metadata: {
+        hasNextPage: false,
+        totalPages: 0,
+      },
+    };
   }
 };

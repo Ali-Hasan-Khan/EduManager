@@ -58,8 +58,15 @@ export const fetchSchedules = async ({ take = 5, skip = 0, query }: { take: numb
         totalPages: Math.ceil(total / take),
       },
     };
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching schedules: ", error);
+    return {
+      data: [],
+      metadata: {
+        hasNextPage: false,
+        totalPages: 0,
+      },
+    };
   }
 };
 
@@ -100,8 +107,6 @@ export const getScheduleByClassId = async (classId: string) => {
   } catch (error) {
     console.error("Error fetching schedules: ", error);
     return [];
-  } finally {
-    await db.$disconnect();
   }
 };
 
@@ -120,8 +125,6 @@ export const getScheduleById = async (scheduleId: string) => {
   } catch(error) {
     console.error("Error fetching schedule by ID:", error);
     return null;
-  } finally {
-    await db.$disconnect();
   }
 };
 

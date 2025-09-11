@@ -1,6 +1,14 @@
 import { db } from "@/lib/db";
 
-export const fetchAssignment = async ({ take = 5, skip = 0, query }: { take: number, skip: number, query: string }) => {
+export const fetchAssignment = async ({
+  take = 5,
+  skip = 0,
+  query,
+}: {
+  take: number;
+  skip: number;
+  query: string;
+}) => {
   "use server";
   try {
     const results = await db.assignments.findMany({
@@ -11,7 +19,11 @@ export const fetchAssignment = async ({ take = 5, skip = 0, query }: { take: num
         OR: [
           { lesson: { name: { contains: query, mode: "insensitive" } } },
           { classroom: { name: { contains: query, mode: "insensitive" } } },
-          { lesson: { teacher: { name: { contains: query, mode: "insensitive" } } } },
+          {
+            lesson: {
+              teacher: { name: { contains: query, mode: "insensitive" } },
+            },
+          },
         ],
       },
       select: {
@@ -49,7 +61,11 @@ export const fetchAssignment = async ({ take = 5, skip = 0, query }: { take: num
         OR: [
           { lesson: { name: { contains: query, mode: "insensitive" } } },
           { classroom: { name: { contains: query, mode: "insensitive" } } },
-          { lesson: { teacher: { name: { contains: query, mode: "insensitive" } } } },
+          {
+            lesson: {
+              teacher: { name: { contains: query, mode: "insensitive" } },
+            },
+          },
         ],
       },
     });
@@ -61,8 +77,15 @@ export const fetchAssignment = async ({ take = 5, skip = 0, query }: { take: num
         totalPages: Math.ceil(total / take),
       },
     };
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching schedules: ", error);
+    return {
+      data: [],
+      metadata: {
+        hasNextPage: false,
+        totalPages: 0,
+      },
+    };
   }
 };
 
@@ -71,19 +94,24 @@ export const getTeacherByTeacherId = async ({
 }: {
   userId?: string;
 }) => {
-  const teacher = await db.lessons.findMany({
-    where: {
-      teacherId: userId,
-    },
-    select: {
-      id: true,
-      teacher: {
-        select: {
-          name: true,
+  try {
+    const teacher = await db.lessons.findMany({
+      where: {
+        teacherId: userId,
+      },
+      select: {
+        id: true,
+        teacher: {
+          select: {
+            name: true,
+          },
         },
       },
-    },
-  });
+    });
 
-  return teacher;
+    return teacher;
+  } catch (error) {
+    console.error("Error fetching teacher by ID:", error);
+    return null;
+  }
 };

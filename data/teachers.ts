@@ -40,7 +40,14 @@ export const fetchTeachers = async ({ take = 5, skip = 0, query }: { take: numbe
         totalPages: Math.ceil(total / take),
       },
     };
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching teachers: ", error);
+    return {
+      data: [],
+      metadata: {
+        hasNextPage: false,
+        totalPages: 0,
+      },
+    };
   }
 };

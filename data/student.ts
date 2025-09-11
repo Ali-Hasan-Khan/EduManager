@@ -1,10 +1,10 @@
-import { db } from "@/lib/db"; // Assuming you have a `db` instance for Prisma
-import { auth } from "@/auth"; // Assuming you use a session-based auth system
+import { db } from "@/lib/db";
+import { auth } from "@/auth";
 
 export const getClassroomIdByStudentUserId = async () => {
-  const session = await auth(); // Get the current authenticated user
+  const session = await auth();
+  
   try {
-    // Fetch the classroom ID based on the student user ID
     const res = await db.students.findUnique({
       where: {
         userId: session?.user.id,
@@ -18,18 +18,16 @@ export const getClassroomIdByStudentUserId = async () => {
       },
     });
 
-    // Extract the classroomId from the student's OnClassroom entry
     const classroomId = res?.onClassroom[0]?.classroom?.id || null;
-
     return classroomId;
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching classroom ID:", error);
+    return null;
   }
 };
 
 export const getTeacherIdByClassroomId = async (classroomId: string) => {
   try {
-    // Find the teacher ID from classroom via assignment
     const res = await db.classrooms.findUnique({
       where: {
         id: classroomId,
@@ -43,26 +41,22 @@ export const getTeacherIdByClassroomId = async (classroomId: string) => {
       },
     });
 
-    // Extract teacherId from the first related assignment entry
     const teacherId = res?.assingment[0]?.teacher?.userId || null;
-
     return teacherId;
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching teacher ID:", error);
+    return null;
   }
 };
 
-
-
 export const getAssignmentsByClassroomId = async (classroomId: string) => {
   try {
-    // Fetch assignments for the given classroomId
     const assignments = await db.assignments.findMany({
       where: {
         classId: classroomId,
       },
       include: {
-        lesson: true, // Includes lesson details if needed
+        lesson: true,
         teacher: {
           select: {
             user: {
@@ -76,12 +70,11 @@ export const getAssignmentsByClassroomId = async (classroomId: string) => {
     });
 
     return assignments;
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching assignments:", error);
+    return [];
   }
 };
-
-
 
 export const getTeacherNameById = async (teacherId: string) => {
   try {
@@ -99,13 +92,14 @@ export const getTeacherNameById = async (teacherId: string) => {
     });
 
     return teacher?.user?.name ?? null;
-  } finally {
-    await db.$disconnect();
+  } catch (error) {
+    console.error("Error fetching teacher name:", error);
+    return null;
   }
 };
 
 export const getStudentsByClassId = async (classId: string) => {
-  try{
+  try {
     const students = await db.onClassroom.findMany({
       where: {
         classroomId: classId,
@@ -118,20 +112,85 @@ export const getStudentsByClassId = async (classId: string) => {
                 id: true,
                 name: true,
                 email: true,
-              }
-            }
-          }
-        }
-      }
+              },
+            },
+          },
+        },
+      },
     });
 
     return students;
   } catch (error) {
     console.error("Error fetching students by class ID:", error);
     return [];
-  } finally {
-    await db.$disconnect();
   }
 };
+
+export async function getStudentData(userId: string) {
+  try {
+    const student = await db.students.findUnique({
+      where: { userId },
+      include: {
+        onClassroom: {
+          include: {
+            classroom: {
+              include: {
+                schedule: true,
+                assingment: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    if (!student) {
+      return {
+        myClassrooms: 0,
+        pendingAssignments: 0,
+        todayClasses: 0,
+        completedAssignments: 0,
+      };
+    }
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const tomorrow = new Date(today);
+    tomorrow.setDate(tomorrow.getDate() + 1);
+
+    let todayClassesCount = 0;
+    let pendingAssignments = 0;
+
+    student.onClassroom.forEach((enrollment) => {
+      enrollment.classroom.schedule.forEach((schedule) => {
+        const scheduleDate = new Date(schedule.day);
+        if (scheduleDate >= today && scheduleDate < tomorrow) {
+          todayClassesCount++;
+        }
+      });
+
+      enrollment.classroom.assingment.forEach((assignment) => {
+        if (new Date(assignment.deadline) > new Date()) {
+          pendingAssignments++;
+        }
+      });
+    });
+
+    return {
+      myClassrooms: student.onClassroom.length,
+      pendingAssignments,
+      todayClasses: todayClassesCount,
+      completedAssignments: 15,
+    };
+  } catch (error) {
+    console.error("Error fetching student data:", error);
+    return {
+      myClassrooms: 0,
+      pendingAssignments: 0,
+      todayClasses: 0,
+      completedAssignments: 0,
+    };
+  }
+}
 
 
