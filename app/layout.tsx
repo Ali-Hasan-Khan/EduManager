@@ -18,19 +18,10 @@ export default async function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  let session;
-  
-  try {
-    session = await auth();
-  } catch (error) {
-    console.error("Auth error in layout:", error);
-    session = null;
-  }
-
   return (
     <html lang="en">
       <body className={inter.className}>
-        <SessionProvider session={session}>
+        <SessionProvider>
           <div className="dark:bg-boxdark-2 dark:text-bodydark">
             <NextTopLoader />
             {children}

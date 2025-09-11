@@ -5,7 +5,7 @@ import { getScheduleByClassId } from "@/data/schedules";
 const TbodyScheduleStudent = async () => {
   const classId = "cm3lz27740000u1ril8o1k3m9";
   const result = await getScheduleByClassId(classId);
-  console.log("studentResult: ", result);
+  // console.log("studentResult: ", result);
   // const scheduleData = ScheduleResult(result);
   // console.log("scheduledata: ",scheduleData);
 
