@@ -97,7 +97,7 @@ export const LoginForm = () => {
       <CardWrapper
         headerLabel="Welcome Back"
         backButtonLabel="Don't have an account?"
-        backButtonHref="/auth/register"
+        backButtonHref="/auth/login"
       >
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
