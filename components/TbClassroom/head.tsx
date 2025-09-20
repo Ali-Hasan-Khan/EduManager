@@ -8,7 +8,7 @@ const tablehdDataClassroom: Tablehd[] = [
     icon: School,
   },
   {
-    name: "Capacity", 
+    name: "Capacity",
     icon: Users,
   },
   {
@@ -23,33 +23,42 @@ const tablehdDataClassroom: Tablehd[] = [
 
 export const TbheadClassroom = () => {
   return (
+    <>
       <thead>
-      <tr className="border-b border-gray-100 dark:border-gray-800">
-        {tablehdDataClassroom.map((tablehdItem, key) => {
-          const IconComponent = tablehdItem.icon;
-          return (
-            <th
-              key={key}
-              className={`font-medium text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wider py-4 ${
-                tablehdItem.name === "Classroom"
-                  ? "min-w-[300px] px-6 xl:pl-8 text-left"
-                  : tablehdItem.name === "Capacity"
-                    ? "min-w-[150px] px-6 text-left"
-                    : tablehdItem.name === "Enrolled Students"
-                      ? "min-w-[180px] px-6 text-left"
-                      : tablehdItem.name === "Actions"
-                        ? "min-w-[120px] px-6 text-center"
-                        : "px-6 text-left"
-              }`}
-            >
-              <div className="flex items-center gap-2">
-                <IconComponent className="h-3.5 w-3.5 text-gray-400" />
-                <span className="font-semibold">{tablehdItem.name}</span>
-              </div>  
-            </th>
-          );
-        })}
+        <tr className="bg-blue-700 text-left dark:bg-meta-4">
+          {tablehdDataClassroom.map((tablehdItem, key) => {
+            const isCenter =
+              tablehdItem.name === "Capacity" ||
+              tablehdItem.name === "Enrolled Students" ||
+              tablehdItem.name === "Actions";
+            return (
+              <th
+                key={key}
+                className={`font-medium text-white dark:text-white ${
+                  tablehdItem.name === "Classroom"
+                    ? "min-w-auto px-4 py-4"
+                    : tablehdItem.name === "Capacity"
+                      ? "min-w-auto px-4 py-4"
+                      : tablehdItem.name === "Enrolled Students"
+                        ? "min-w-auto px-4 py-4"
+                        : tablehdItem.name === "Actions"
+                          ? "px-4 py-4 text-center"
+                          : ""
+                }`}
+              >
+                <div
+                  className={`flex items-center gap-2${
+                    isCenter ? " justify-center" : ""
+                  }`}
+                >
+                  <tablehdItem.icon className="h-4 w-4" />
+                  {tablehdItem.name}
+                </div>
+              </th>
+            );
+          })}
         </tr>
       </thead>
+    </>
   );
 };

@@ -145,6 +145,13 @@ export const SIDEBAR_ITEMS: SideNavItemGroup[] = [
         path: "/student/classroom/assignment",
         icon: <MdOutlineAssignment size={20} />,
       },
+      {
+        allowedStatus: [UserStatus.ACTIVE],
+        allowedRole: [UserRole.STUDENT],
+        title: "Attendance",
+        path: "/student/classroom/attendance",
+        icon: <MdOutlineAssignment size={20} />,
+      },
     ],
   },      
   {

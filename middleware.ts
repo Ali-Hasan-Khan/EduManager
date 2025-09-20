@@ -6,6 +6,8 @@ import {
   publicRoutes,
 } from "@/routes";
 
+import { UserRole } from "@prisma/client";
+
 export default auth((req) => {
   try {
     const { nextUrl } = req;
@@ -37,6 +39,29 @@ export default auth((req) => {
       return Response.redirect(
         new URL(`/auth/login?callbackUrl=${encodedCallbackUrl}`, nextUrl)
       );
+    }
+
+    const userRole = req.auth?.user?.role;
+
+    // Student routes
+    if (nextUrl.pathname.startsWith("/student")) {
+      if (!isLoggedIn || userRole !== UserRole.STUDENT) {
+        return Response.redirect(new URL("/auth/login", nextUrl));
+      }
+    }
+
+    // Teacher routes
+    if (nextUrl.pathname.startsWith("/teacher")) {
+      if (!isLoggedIn || userRole !== UserRole.TEACHER) {
+        return Response.redirect(new URL("/auth/login", nextUrl));
+      }
+    }
+
+    // Admin routes
+    if (nextUrl.pathname.startsWith("/admin")) {
+      if (!isLoggedIn || userRole !== UserRole.ADMIN) {
+        return Response.redirect(new URL("/auth/login", nextUrl));
+      }
     }
 
     return;

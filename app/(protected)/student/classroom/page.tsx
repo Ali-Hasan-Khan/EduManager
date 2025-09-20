@@ -3,15 +3,6 @@ import { TbheadClassroom } from "@/components/TbClassroom/head";
 import { PageProps } from "@/types/pagination";
 import TbodyStudentClassroom from "@/components/TbStudentClassroom/body";
 
-// Dummy classroom data to simulate a student's classroom
-// const c = {
-//   id: 1,
-//   name: "Grade 1",
-//   teacher: "Mr. Johnson",
-//   cap: 30,
-//   count: 3,
-// };
-
 
 const Classroom = async (props: PageProps) => {
   return (

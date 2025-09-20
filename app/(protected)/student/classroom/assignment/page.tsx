@@ -1,6 +1,9 @@
 import React from "react";
+import { RoleGate } from "@/components/auth/role-gate";
+import { UserRole } from "@prisma/client";
 import { TbheadAssignment } from "@/components/TbAssignmentStudent/head";
 import TbbodyAssignment from "@/components/TbAssignmentStudent/body";
+import { auth } from "@/auth";
 import {
   getClassroomIdByStudentUserId,
   getTeacherIdByClassroomId,
@@ -13,7 +16,19 @@ const UserList = async () => {
 
   if (!classroomId) {
     console.log("Classroom ID not found");
-    return [];
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600">
+            No Classroom Found
+          </h1>
+          <p className="text-gray-600">
+            You are not assigned to any classroom. Please contact your
+            administrator.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   // Fetch teacher ID and assignments concurrently
@@ -24,7 +39,18 @@ const UserList = async () => {
 
   if (!teacherId) {
     console.log("Teacher ID not found for the given classroom");
-    return [];
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-red-600">
+            No Teacher Assigned
+          </h1>
+          <p className="text-gray-600">
+            There is currently no teacher assigned to your classroom.
+          </p>
+        </div>
+      </div>
+    );
   }
 
   // Fetch all teacher names for the `createBy` field in parallel

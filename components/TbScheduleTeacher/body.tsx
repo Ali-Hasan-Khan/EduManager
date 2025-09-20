@@ -2,10 +2,11 @@ import React from "react";
 import { getSchedulebyTeacherId } from "@/data/teacher";
 import { getAttendanceStatusForSchedules } from "@/data/attendance";
 import Link from "next/link";
+import { Lock } from "lucide-react";
 
 const TbodyScheduleTeacher = async () => {
   const result = await getSchedulebyTeacherId();
-  
+
   // Since result is an object (single teacher), handle it directly
   if (!result) {
     return (
@@ -28,7 +29,19 @@ const TbodyScheduleTeacher = async () => {
   const teacher = result as any;
 
   // Get attendance status for all schedules
-  const attendanceMap = await getAttendanceStatusForSchedules(teacher.id);
+  const attendanceMap = await getAttendanceStatusForSchedules(teacher.userId);
+
+  // Helper function to check if class is in the future
+  const isClassInFuture = (date: string, time: string) => {
+    const now = new Date();
+    const classDate = new Date(date);
+
+    // Parse time (assuming format like "08:00")
+    const [hours, minutes] = time.split(":").map(Number);
+    classDate.setHours(hours, minutes, 0, 0);
+
+    return classDate > now;
+  };
 
   // Flatten the data structure for better table representation
   const scheduleData =
@@ -38,6 +51,7 @@ const TbodyScheduleTeacher = async () => {
             const dateStr = new Date(schedule.day).toISOString().split("T")[0];
             const attendanceKey = `${schedule.id}-${dateStr}`;
             const isAttendanceTaken = attendanceMap.has(attendanceKey);
+            const isFuture = isClassInFuture(dateStr, schedule.time);
 
             return {
               id: schedule.id,
@@ -52,6 +66,7 @@ const TbodyScheduleTeacher = async () => {
               teacherId: teacher.id,
               lessonId: lesson.id,
               isAttendanceTaken,
+              isFuture,
             };
           })
         : [
@@ -68,9 +83,12 @@ const TbodyScheduleTeacher = async () => {
               teacherId: teacher.id,
               lessonId: lesson.id,
               isAttendanceTaken: false,
+              isFuture: false,
             },
           ]
     ) || [];
+
+  console.log("schedule data:", scheduleData);
 
   return (
     <tbody>
@@ -102,7 +120,14 @@ const TbodyScheduleTeacher = async () => {
             </td>
             <td className="border-b border-[#eee] px-4 py-5 dark:border-strokedark">
               {item.date && item.classroomId ? (
-                item.isAttendanceTaken ? (
+                item.isFuture ? (
+                  // Future class - locked status
+                  <div className="inline-flex items-center text-sm text-gray-500 dark:text-gray-400">
+                    <Lock className="h-4 w-4 mr-1" />
+                    <span>Future Class</span>
+                  </div>
+                ) : item.isAttendanceTaken ? (
+                  // Past/current class with attendance taken
                   <Link
                     href={`/teacher/attendance/view/${item.id}?classId=${item.classroomId}&lessonId=${item.lessonId}&date=${item.date}`}
                     className="inline-flex items-center text-sm text-green-600 hover:text-green-700 hover:underline dark:text-green-400 dark:hover:text-green-300 transition-colors duration-200"
@@ -111,12 +136,13 @@ const TbodyScheduleTeacher = async () => {
                     <span>View Attendance</span>
                   </Link>
                 ) : (
+                  // Past/current class without attendance taken
                   <Link
                     href={`/teacher/attendance/${item.id}?classId=${item.classroomId}&lessonId=${item.lessonId}&date=${item.date}`}
                     className="inline-block text-sm text-blue-600 hover:text-blue-800 hover:underline dark:text-blue-400 dark:hover:text-blue-300 transition-colors duration-200"
                   >
-                    Take Attendance
                     <span className="ml-1 text-xs">📋</span>
+                    Take Attendance
                   </Link>
                 )
               ) : (
