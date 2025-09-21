@@ -5,51 +5,9 @@ import { Button } from "@/components/ui/button";
 import { LoginButton } from "@/components/auth/login-button";
 import Link from "next/link";
 import Image from 'next/image';
-import { ArrowRight, Loader2 } from "lucide-react";
-import { demoLogin } from "@/actions/demo-login";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { toast } from "sonner";
-import { signIn } from "next-auth/react";
+import { ArrowRight } from "lucide-react";
 
 export function HeroSection() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(false);
-
-  const onDemoLogin = async () => {
-    try {
-      setIsLoading(true);
-      
-      // First ensure demo user exists
-      const result = await demoLogin();
-      
-      if (result?.error) {
-        toast.error(result.error);
-        return;
-      }
-      
-      // Then use client-side signIn
-      const signInResult = await signIn("credentials", {
-        email: "demo@edumanager.com",
-        password: "123456",
-        redirect: false,
-      });
-
-      if (signInResult?.error) {
-        toast.error("Demo login failed. Please try again.");
-        return;
-      }
-
-      if (signInResult?.ok) {
-      toast.success("Demo login successful!");
-      window.location.href = "/home";
-      }
-    } catch (error) {
-      toast.error("Something went wrong!");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   return (
     <div className="relative flex flex-col items-center justify-center min-h-screen pt-0 lg:pt-16 pb-8 px-4 sm:px-6 lg:px-8">
@@ -57,7 +15,7 @@ export function HeroSection() {
       <div className="relative z-20 w-full max-w-7xl mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           {/* Left Content */}
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.5 }}
@@ -75,11 +33,11 @@ export function HeroSection() {
                 />
               </Link>
             </div>
-            
+
             <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-center lg:text-left leading-tight">
               Transform Your School Management
             </h1>
-            
+
             <p className="text-base sm:text-lg text-gray-300 text-center lg:text-left leading-relaxed max-w-lg lg:max-w-none mx-auto lg:mx-0">
               Streamline operations, enhance communication, and empower your educational institution with our comprehensive management system.
             </p>
@@ -94,22 +52,6 @@ export function HeroSection() {
                   <ArrowRight className="w-4 h-4" />
                 </Button>
               </LoginButton>
-              <Button
-                variant="outline"
-                size="lg"
-                className="border-white text-white hover:bg-white/10 flex items-center justify-center gap-2 w-full sm:w-auto px-6 py-3 text-base"
-                onClick={onDemoLogin}
-                disabled={isLoading}
-              >
-                {isLoading ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
-                ) : (
-                  <>
-                    Take a demo
-                <ArrowRight className="w-4 h-4" />
-                  </>
-                )}
-              </Button>
             </div>
           </motion.div>
 

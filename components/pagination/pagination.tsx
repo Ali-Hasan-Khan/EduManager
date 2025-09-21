@@ -31,15 +31,12 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
     isActive: boolean;
   }) => {
     const className = clsx(
-      "flex h-10 w-10 items-center justify-center text-sm border",
+      "flex h-9 w-9 items-center justify-center text-sm font-medium transition-all duration-200 rounded-lg",
       {
-        "rounded-l-sm": position === "first" || position === "single",
-        "rounded-r-sm": position === "last" || position === "single",
-        "z-10 bg-blue-700 dark:border-boxdark text-white ": isActive,
-        "hover:bg-blue-500 hover:text-white border border-white hover:rounded dark:border-boxdark":
+        "bg-primary text-white shadow-md hover:bg-primary/90": isActive,
+        "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white border border-stroke dark:border-strokedark":
           !isActive && position !== "middle",
-        "text-gray-300 pointer-events-none dark:border-boxdark border border-white":
-          position === "middle",
+        "text-gray-400 dark:text-gray-600 pointer-events-none": position === "middle",
       }
     );
 
@@ -62,11 +59,10 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
     isDisabled?: boolean;
   }) => {
     const className = clsx(
-      "flex h-10 w-10 items-center justify-center text-sm border",
+      "flex h-9 w-9 items-center justify-center text-sm font-medium transition-all duration-200 rounded-lg",
       {
-        "pointer-events-none text-white bg-red border border-white dark:border-boxdark":
-          isDisabled,
-        "hover:bg-blue-700 bg-trasnparent border border-white hover:text-white dark:border-boxdark dark:hover:border-white":
+        "text-gray-400 dark:text-gray-600 pointer-events-none cursor-not-allowed": isDisabled,
+        "text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-900 dark:hover:text-white border border-stroke dark:border-strokedark":
           !isDisabled,
         "mr-2": direction === "left",
         "ml-2": direction === "right",
@@ -75,9 +71,9 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
 
     const icon =
       direction === "left" ? (
-        <HiChevronLeft size={20} />
+        <HiChevronLeft size={18} />
       ) : (
-        <HiChevronRight size={20} />
+        <HiChevronRight size={18} />
       );
 
     return isDisabled ? (
@@ -90,14 +86,14 @@ const Pagination = ({ totalPages }: { totalPages: number }) => {
   };
 
   return (
-    <div className="inline-flex">
+    <div className="flex items-center justify-center gap-1">
       <PaginationArrow
         direction="left"
         href={createPageURL(currentPage - 1)}
         isDisabled={currentPage <= 1}
       />
 
-      <div className="flex -space-x-px">
+      <div className="flex items-center gap-1">
         {allPages.map((page, index) => {
           let position: "first" | "last" | "single" | "middle" | undefined;
 

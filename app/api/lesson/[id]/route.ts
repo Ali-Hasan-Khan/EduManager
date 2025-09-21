@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import { PrismaClient } from "@prisma/client";
-import { Lessons } from "@prisma/client";
-import { LessonCategory } from "@prisma/client";
+import { db } from "@/lib/db";
+import { Lessons, LessonCategory } from "@prisma/client";
 import { z } from "zod";
 const LessonSchema = z.object({
   teacher: z.string().min(4, { message: "Select teacher" }),
@@ -18,7 +17,6 @@ const LessonSchema = z.object({
     }
   ),
 });
-const prisma = new PrismaClient();
 
 export const PATCH = async (
   request: Request,
@@ -27,7 +25,7 @@ export const PATCH = async (
   try {
     const body: Lessons = await request.json();
     const validatedData = LessonSchema.parse(body);
-    const Editlesson = await prisma.lessons.update({
+    const Editlesson = await db.lessons.update({
       where: {
         id: String(params.id),
       },
@@ -50,8 +48,6 @@ export const PATCH = async (
         { status: 505 }
       );
     }
-  } finally {
-    await prisma.$disconnect();
   }
 };
 
@@ -59,12 +55,11 @@ export const DELETE = async (
   request: Request,
   { params }: { params: { id: string } }
 ) => {
-  const lesson = await prisma.lessons.delete({
+  const lesson = await db.lessons.delete({
     where: {
       id: String(params.id),
     },
   });
 
-  await prisma.$disconnect();
   return NextResponse.json(lesson, { status: 200 });
 };

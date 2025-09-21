@@ -61,10 +61,10 @@ const Ad = () => {
         variant="ghost"
         size="sm"
         onClick={() => setShowModal(true)}
-        className="h-8 w-8 p-0 hover:bg-green-50 hover:text-green-600 dark:hover:bg-green-950 dark:hover:text-green-400 transition-colors"
+        className="h-auto w-auto p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-300 flex items-center gap-2"
       >
         <Plus className="h-4 w-4" />
-        <span className="sr-only">Add classroom</span>
+        <span>Add classroom</span>
       </Button>
 
       <Dialog open={showModal} onOpenChange={setShowModal}>

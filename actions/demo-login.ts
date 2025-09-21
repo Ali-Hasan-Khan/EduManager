@@ -1,35 +1,46 @@
 "use server";
 
-import { db } from "@/lib/db";
-import bcrypt from "bcryptjs";
+import { signIn } from "@/auth";
+import { UserRole } from "@prisma/client";
+import { getUserByEmail } from "@/data/user";
 
-export const demoLogin = async () => {
+export const demoLogin = async (role: UserRole) => {
+  if (role === UserRole.UNKNOW) {
+    return { error: "Unknown demo role selected" };
+  }
+  const demoAccounts: Record<UserRole, string> = {
+    [UserRole.ADMIN]: "demo-admin@edumanager.com",
+    [UserRole.TEACHER]: "demo-teacher@edumanager.com",
+    [UserRole.STUDENT]: "demo-student@edumanager.com",
+    [UserRole.UNKNOW]: "",
+  };
+
+  const email = demoAccounts[role];
+  if (!email) {
+    return { error: "Invalid demo role selected" };
+  }
+
+  const existingUser = await getUserByEmail(email);
+
+  if (!existingUser) {
+    return {
+      error: `Demo ${role.toLowerCase()} account not found. Please contact administrator.`,
+    };
+  }
+
+  if (existingUser.role !== role) {
+    return { error: "Demo account role mismatch" };
+  }
+
   try {
-    // Check if demo user exists
-    let demoUser = await db.user.findUnique({
-      where: {
-        email: "demo@edumanager.com",
-      },
+    const result = await signIn("credentials", {
+      email,
+      password: "demo123", // Demo password
+      redirect: false,
     });
 
-    // If demo user doesn't exist, create one
-    if (!demoUser) {
-      try {
-        const hashedPassword = await bcrypt.hash("123456", 10);
-        demoUser = await db.user.create({
-          data: {
-            name: "Demo User",
-            email: "demo@edumanager.com",
-            password: hashedPassword,
-            role: "STUDENT",
-            status: "ACTIVE",
-            emailVerified: new Date(),
-          },
-        });
-      } catch (createError) {
-        console.error("Error creating demo user:", createError);
-        return { error: "Failed to create demo user. Please try again." };
-      }
+    if (result?.error) {
+      return { error: "Demo login failed. Please try again." };
     }
 
     return { success: "Demo user ready for login" };
@@ -37,4 +48,4 @@ export const demoLogin = async () => {
     console.error("Unexpected error during demo login:", error);
     return { error: "An unexpected error occurred. Please try again later." };
   }
-}; 
+};

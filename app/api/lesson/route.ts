@@ -1,4 +1,5 @@
-import { PrismaClient, LessonCategory } from "@prisma/client";
+import { db } from "@/lib/db";
+import { LessonCategory } from "@prisma/client";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -17,13 +18,12 @@ const LessonSchema = z.object({
     }
   ),
 });
-const prisma = new PrismaClient();
 
 export const POST = async (request: Request) => {
   try {
     const body = await request.json();
     const validatedData = LessonSchema.parse(body);
-    const newLesson = await prisma.lessons.create({
+    const newLesson = await db.lessons.create({
       data: {
         name: validatedData.name,
         cat: validatedData.cat as LessonCategory,
@@ -43,7 +43,5 @@ export const POST = async (request: Request) => {
         { status: 505 }
       );
     }
-  } finally {
-    await prisma.$disconnect();
   }
 };

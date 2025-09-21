@@ -11,7 +11,7 @@ const Classroom = async (props: PageProps) => {
         <div className="max-w-full overflow-x-auto">
           <table className="w-full table-auto">
             <TbheadClassroom />
-            <TbodyStudentClassroom {...props} />
+            <TbodyStudentClassroom />
           </table>
         </div>
       </div>

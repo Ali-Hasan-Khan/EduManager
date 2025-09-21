@@ -1,11 +1,11 @@
 import React from "react";
 import { Tablehd } from "@/types/table";
-import { Book, User, Calendar, Percent, Eye, BarChart3 } from "lucide-react";
+import { BookOpen, User, BarChart3, Percent, Eye } from "lucide-react";
 
 const tablehdDataAttendance: Tablehd[] = [
   {
     name: "Lesson",
-    icon: Book,
+    icon: BookOpen,
   },
   {
     name: "Teacher",
@@ -25,44 +25,36 @@ const tablehdDataAttendance: Tablehd[] = [
   },
 ];
 
-const TbheadAttendance = () => {
+export const TbheadAttendanceStudent = () => {
   return (
-    <>
-      <thead>
-        <tr className="bg-blue-700 text-left dark:bg-meta-4">
-            {tablehdDataAttendance.map((tablehdItem, key) => {
-            const isCenter =
-              tablehdItem.name === "Total Classes" ||
-              tablehdItem.name === "Attendance %" ||
-              tablehdItem.name === "Actions";
-            return (
-              <th
+    <thead>
+      <tr className="border-b border-gray-100 dark:border-gray-800">
+        {tablehdDataAttendance.map((tablehdItem, key) => {
+          const IconComponent = tablehdItem.icon;
+          return (
+            <th
               key={key}
-              className={`font-medium text-white dark:text-white ${
-                tablehdItem.name === "Lesson"
-                ? "min-w-auto px-4 py-4"
-                : tablehdItem.name === "Teacher"
-                  ? "min-w-auto px-4 py-4"
-                  : tablehdItem.name === "Total Classes"
-                  ? "min-w-auto px-4 py-4"
-                  : tablehdItem.name === "Attendance %"
-                    ? "min-w-auto px-4 py-4"
-                    : tablehdItem.name === "Actions"
-                    ? "px-4 py-4 text-center"
-                    : ""
-              }`}
-              >
-              <div className={`flex items-center gap-2${isCenter ? " justify-center" : ""}`}>
-                <tablehdItem.icon className="h-4 w-4" />
-                {tablehdItem.name}
+              className={`font-medium text-gray-600 dark:text-gray-400 text-xs uppercase tracking-wider py-4 ${tablehdItem.name === "Lesson"
+                  ? "min-w-[300px] px-6 xl:pl-8 text-left"
+                  : tablehdItem.name === "Teacher"
+                    ? "min-w-[200px] px-6 text-left"
+                    : tablehdItem.name === "Total Classes"
+                      ? "min-w-[150px] px-6 text-center"
+                      : tablehdItem.name === "Attendance %"
+                        ? "min-w-[150px] px-6 text-center"
+                        : tablehdItem.name === "Actions"
+                          ? "min-w-[120px] px-6 text-center"
+                          : "px-6 text-left"
+                }`}
+            >
+              <div className="flex items-center gap-2">
+                <IconComponent className="h-3.5 w-3.5 text-gray-400" />
+                <span className="font-semibold">{tablehdItem.name}</span>
               </div>
-              </th>
-            );
-            })}
-        </tr>
-      </thead>
-    </>
+            </th>
+          );
+        })}
+      </tr>
+    </thead>
   );
 };
-
-export default TbheadAttendance;

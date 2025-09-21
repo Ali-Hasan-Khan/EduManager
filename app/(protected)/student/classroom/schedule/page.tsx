@@ -1,8 +1,7 @@
 import React from "react";
-import { TbheadLesson } from "@/components/TbScheduleTeacher/head";
+import { TbheadScheduleStudent } from "@/components/TbScheduleStudent/head";
 import { PageProps } from "@/types/pagination";
 import TbodyScheduleStudent from "@/components/TbScheduleStudent/body";
-import { TbheadScheduleStudent } from "@/components/TbScheduleStudent/head";
 
 const Classroom = async (props: PageProps) => {
   return (

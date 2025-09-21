@@ -1,6 +1,6 @@
 import React from "react";
-import { TbheadAssignment } from "@/components/TbAssignmentTeacher/head";
-import TbodyAssignment from "@/components/TbAssignmentTeacher/body";
+import { TbheadAssignmentTeacher } from "@/components/TbAssignmentTeacher/head";
+import TbodyAssignmentTeacher from "@/components/TbAssignmentTeacher/body";
 import Ad from "@/components/TbAssignmentTeacher/btn/ad";
 import { getAllClassrooms } from "@/data/academy";
 import { getLessonbyTeacherId } from "@/data/teacher";
@@ -13,8 +13,8 @@ const UserList = async () => {
         <div className="max-w-full overflow-x-auto">
           <Ad lessons={data} classrooms={classrooms} />
           <table className="w-full table-auto">
-            <TbheadAssignment />
-            <TbodyAssignment />
+            <TbheadAssignmentTeacher />
+            <TbodyAssignmentTeacher />
           </table>
         </div>
       </div>

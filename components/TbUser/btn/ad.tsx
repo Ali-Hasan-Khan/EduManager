@@ -22,13 +22,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { 
-  Plus, 
-  Loader2, 
-  User, 
-  Mail, 
-  Lock, 
-  Shield, 
+import {
+  Plus,
+  Loader2,
+  User,
+  Mail,
+  Lock,
+  Shield,
   Activity,
   UserPlus,
   Save
@@ -80,12 +80,12 @@ const Ad = () => {
         emailVerified: new Date(),
         gender: gender || undefined
       });
-      
+
       toast({
         title: "User created successfully",
         description: `${response.data.name} has been added as a ${response.data.role.toLowerCase()}.`,
       });
-      
+
       // Reset form
       setName("");
       setPassword("");
@@ -94,7 +94,7 @@ const Ad = () => {
       setRole("");
       setStatus("");
       setShowPassword(false);
-      
+
       setShowModal(false);
       router.refresh();
     } catch (error: any) {
@@ -102,7 +102,7 @@ const Ad = () => {
       if (error.response?.data?.error) {
         errorMessage = error.response.data.error;
       }
-      
+
       toast({
         variant: "destructive",
         title: "Creation Failed",
@@ -127,12 +127,13 @@ const Ad = () => {
   return (
     <>
       <Button
-        onClick={() => setShowModal(true)}
-        className="bg-blue-600 hover:bg-blue-700 text-white shadow-sm"
+        variant="ghost"
         size="sm"
+        onClick={() => setShowModal(true)}
+        className="h-auto w-auto p-2 bg-blue-600 hover:bg-blue-700 text-white transition-colors duration-300 flex items-center gap-2"
       >
-        <Plus className="h-4 w-4 mr-2" />
-                    Add User
+        <Plus className="h-4 w-4" />
+        <span>Add user</span>
       </Button>
 
       <Dialog open={showModal} onOpenChange={setShowModal}>
@@ -154,18 +155,18 @@ const Ad = () => {
                 <User className="h-4 w-4" />
                 Basic Information
               </h4>
-              
+
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="name" className="text-sm font-medium">
                     Full Name *
                   </Label>
                   <Input
-                      id="name"
-                      type="text"
+                    id="name"
+                    type="text"
                     placeholder="Enter full name"
-                      value={name}
-                      onChange={(e) => setName(e.target.value)}
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
                     className="h-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
@@ -176,11 +177,11 @@ const Ad = () => {
                     Email Address *
                   </Label>
                   <Input
-                      id="email"
-                      type="email"
+                    id="email"
+                    type="email"
                     placeholder="Enter email address"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
                     className="h-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
@@ -193,11 +194,11 @@ const Ad = () => {
                 </Label>
                 <div className="relative">
                   <Input
-                      id="password"
+                    id="password"
                     type={showPassword ? "text" : "password"}
                     placeholder="Enter password (min 6 characters)"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
                     className="h-10 pr-10 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     required
                   />
@@ -222,7 +223,7 @@ const Ad = () => {
                 <Shield className="h-4 w-4" />
                 Account Settings
               </h4>
-              
+
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="role" className="text-sm font-medium">
@@ -269,9 +270,9 @@ const Ad = () => {
                       <SelectItem value={UserGender.UNKNOW}>Unknown</SelectItem>
                     </SelectContent>
                   </Select>
+                </div>
               </div>
             </div>
-          </div>
 
             <DialogFooter className="gap-3 pt-4">
               <Button
